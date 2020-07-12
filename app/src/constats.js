@@ -1,0 +1,1 @@
+export const IMG_SIZE = 1024
