@@ -9,23 +9,29 @@ import './App.css';
 const getPlayerStates = (jsonFile, startFrame, endFrame) => {
   const states = jsonFile.States.slice(startFrame, endFrame)
   return states.map(state => {
-    return state.Players
-  })
-}
-
-const getRounds = (jsonFile) => {
-  return jsonFile.RoundStarts.map((curr, idx, rounds) => {
-    const endFrame = idx < rounds.length ? rounds[idx + 1] : jsonFile.States.length
     return {
-      round: idx + 1,
-      startFrame: curr,
-      endFrame: endFrame
+      players: state.Players,
+      timeElapsed: state.Time
     }
   })
 }
 
+const getRounds = (jsonFile) => {
+  return jsonFile.RoundStarts
+    .map((curr, idx, rounds) => {
+      const currentFrame = curr.Frame
+      const endFrame = idx < rounds.length - 1 ? rounds[idx + 1].Frame : jsonFile.States.length
+      return {
+        round: idx + 1,
+        startFrame: currentFrame,
+        endFrame: endFrame,
+        roundTime: curr.RoundTime
+      }
+    })
+}
+
 const changeRound = (value, setCurrentRoundIdx) => {
-  setCurrentRoundIdx(value)
+  setCurrentRoundIdx(value - 1)
 }
 
 const rounds = getRounds(inferno)
@@ -45,6 +51,7 @@ function App() {
         item xs={5}>
         <DemoPlayer
           states={states}
+          currentRound={rounds[currentRoundIdx]}
         />
         <Rounds
           rounds={rounds}

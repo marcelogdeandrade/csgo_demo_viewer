@@ -1,5 +1,5 @@
 import React from 'react'
-import { withStyles, makeStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import SliderMaterial from '@material-ui/core/Slider';
 
 const PrettoSlider = withStyles({
@@ -36,7 +36,8 @@ function Slider(props) {
     return (
         <PrettoSlider
             onChange={props.onChange}
-            default={props.defaultValue}
+            defaultValue={props.defaultValue}
+            value={props.value}
             min={props.min}
             max={props.max}
         />

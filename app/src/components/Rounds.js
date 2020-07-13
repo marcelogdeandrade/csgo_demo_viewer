@@ -2,7 +2,7 @@ import React from 'react'
 import Slider from '@material-ui/core/Slider';
 
 function Rounds(props) {
-    const max = props.rounds.length + 1
+    const max = props.rounds.length
     return (
         <div>
             <Slider

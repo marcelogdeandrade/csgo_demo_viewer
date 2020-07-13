@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
+import moment from 'moment';
 
 export function useInterval(callback, delay) {
     const savedCallback = useRef();
@@ -18,4 +19,10 @@ export function useInterval(callback, delay) {
             return () => clearInterval(id);
         }
     }, [delay]);
+}
+
+export const formatTime = (seconds) => {
+    return moment().startOf('day')
+        .seconds(seconds)
+        .format('mm:ss');
 }

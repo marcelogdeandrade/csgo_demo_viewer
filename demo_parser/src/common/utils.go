@@ -2,7 +2,9 @@ package common
 
 import (
 	"log"
+	"math"
 	"os"
+	"strconv"
 
 	"github.com/markus-wa/demoinfocs-golang/metadata"
 	dem "github.com/markus-wa/demoinfocs-golang/v2/pkg/demoinfocs"
@@ -25,8 +27,8 @@ func CreateMatchStruct(p dem.Parser, frameFactor int) (header common_dem.DemoHea
 	match = &Match{
 		MapName:     header.MapName,
 		FrameFactor: frameFactor,
-		RoundStarts: make([]int, 0),
-		States:      make([]FrameState, frames+1),
+		RoundStarts: make([]RoundStart, 0),
+		States:      make([]FrameState, frames+10),
 	}
 	return
 }
@@ -57,7 +59,9 @@ func AddStates(p dem.Parser, header common_dem.DemoHeader, match *Match) {
 		players = append(cts, ts...)
 
 		idx := AdjustFrameIndex(p.CurrentFrame(), match.FrameFactor)
+		currentTime := int(float64(p.CurrentTime()) / math.Pow(10, 9))
 		match.States[idx].Players = players
+		match.States[idx].Time = currentTime
 	}
 }
 
@@ -91,4 +95,11 @@ func CheckError(err error) {
 // AdjustFrameIndex function
 func AdjustFrameIndex(frame int, factor int) int {
 	return (frame / factor)
+}
+
+// GetRoundTime function
+func GetRoundTime(gameState dem.GameState) int {
+	roundtime, _ := strconv.ParseFloat(gameState.ConVars()["mp_roundtime_defuse"], 64)
+	freezetime, _ := strconv.Atoi(gameState.ConVars()["mp_freezetime"])
+	return int(roundtime*60) + freezetime
 }

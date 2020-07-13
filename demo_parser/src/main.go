@@ -8,7 +8,7 @@ import (
 	common "github.com/marcelogdeandrade/csgo_demo_viewer/src/common"
 )
 
-const frameFactor = 5
+const frameFactor = 1
 
 func main() {
 	p, f := common.OpenDemo("./demos/polaris_inferno.dem")

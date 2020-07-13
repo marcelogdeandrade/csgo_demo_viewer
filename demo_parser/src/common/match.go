@@ -4,6 +4,6 @@ package common
 type Match struct {
 	FrameFactor int
 	MapName     string
-	RoundStarts []int
+	RoundStarts []RoundStart
 	States      []FrameState
 }
