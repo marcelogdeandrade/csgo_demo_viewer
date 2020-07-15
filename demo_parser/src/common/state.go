@@ -2,7 +2,9 @@ package common
 
 // FrameState Struct
 type FrameState struct {
-	Players []Player
-	Kill    Kill
-	Time    int
+	Players         []Player
+	Grenades        []Grenade
+	GrenadeExplodes []int64
+	Kill            Kill
+	Time            int
 }

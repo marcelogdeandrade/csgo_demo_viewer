@@ -25,4 +25,10 @@ func RegisterEventHandlers(p dem.Parser, match *Match) {
 			Killer: e.Killer.Name,
 		}
 	})
+	p.RegisterEventHandler(func(e events.SmokeStart) {
+		idx := AdjustFrameIndex(p.CurrentFrame(), match.FrameFactor)
+		grenade := e.Grenade
+		grenadeExplodes := match.States[idx].GrenadeExplodes
+		match.States[idx].GrenadeExplodes = append(grenadeExplodes, grenade.UniqueID())
+	})
 }

@@ -10,10 +10,25 @@ const getPlayerStates = (jsonFile, startFrame, endFrame) => {
   const states = jsonFile.States.slice(startFrame, endFrame)
   return states.map(state => {
     return {
-      players: state.Players,
+      players: parsePlayers(state.Players),
+      grenades: parseGrenades(state.Grenades, state.GrenadeExplodes),
       timeElapsed: state.Time
     }
+  }).map((state, i, states) => {
+    const previousGrenades = i > 0 ? states[i - 1].grenades : []
+    const currentGrenades = state.grenades.map(grenade => {
+      const previousGrenade = getGrenade(previousGrenades, grenade.id)
+      const isExploded = previousGrenade ? previousGrenade.isExploded : false
+      grenade.isExploded = isExploded || grenade.isExploded
+      return grenade
+    })
+    state.grenades = currentGrenades
+    return state
   })
+}
+
+const getGrenade = (grenades, id) => {
+  return grenades.find(grenade => grenade.id === id);
 }
 
 const getRounds = (jsonFile) => {
@@ -28,6 +43,26 @@ const getRounds = (jsonFile) => {
         roundTime: curr.RoundTime
       }
     })
+}
+
+const parseGrenades = (grenades, grenadeExplodes) => {
+  return grenades.map(grenade => {
+    const isExploded = grenadeExplodes.includes(grenade.ID)
+    return {
+      x: grenade.X,
+      y: grenade.Y,
+      type: grenade.Type,
+      id: grenade.ID,
+      isExploded: isExploded
+    }
+  })
+}
+
+const parsePlayers = (players) => {
+  return players.map(player => {
+    return { x: player.X, y: player.Y, team: player.Team }
+
+  })
 }
 
 const changeRound = (value, setCurrentRoundIdx) => {

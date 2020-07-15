@@ -4,10 +4,9 @@ import Box from '@material-ui/core/Box';
 
 function Player(props) {
   const { player, positionMultipler } = props
-  console.log(positionMultipler)
-  const x = (player.x - 5) * positionMultipler
-  const y = (player.y + 15) * positionMultipler
   const playerSize = 20 * positionMultipler
+  const x = (player.x - 5 - playerSize / 2) * positionMultipler
+  const y = (player.y + 15 - playerSize / 2) * positionMultipler
   return (
     <Box
       zIndex={1000}

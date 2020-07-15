@@ -1,5 +1,6 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import Player from './Player'
+import Grenade from './Grenade'
 import Image from './Image'
 import { useInterval, formatTime } from '../utils'
 import Box from '@material-ui/core/Box';
@@ -9,10 +10,6 @@ import PauseCircleFilledIcon from '@material-ui/icons/PauseCircleFilled';
 import { IMG_SIZE } from '../constats'
 import Slider from './Slider'
 
-const parsePlayer = (player) => {
-  return { x: player.X, y: player.Y, team: player.Team }
-}
-
 const calculatePositionMultiplier = (initialSize, currentSize) => {
   return currentSize / initialSize
 }
@@ -21,7 +18,18 @@ const renderPlayers = (players, imgCurrentSize) => {
   if (players) {
     return players.map(player => {
       return <Player
-        player={(parsePlayer(player))}
+        player={(player)}
+        positionMultipler={calculatePositionMultiplier(IMG_SIZE, imgCurrentSize)}
+      />
+    })
+  } return []
+}
+
+const renderGrenades = (grenades, grenadeExplodes, imgCurrentSize) => {
+  if (grenades) {
+    return grenades.map(grenade => {
+      return <Grenade
+        grenade={grenade}
         positionMultipler={calculatePositionMultiplier(IMG_SIZE, imgCurrentSize)}
       />
     })
@@ -47,10 +55,13 @@ function DemoPlayer(props) {
   const [imgWidth, setImgWidth] = useState(null)
   const [isRunning, setIsRunning] = useState(false);
 
+  useLayoutEffect(() => {
+    setCurrentIdx(0)
+  }, [props.currentRound]);
 
   const updatePosition = () => {
     if (currentIdx < props.states.length - 1) {
-      setCurrentIdx(currentIdx + 1)
+      setCurrentIdx(prevValue => prevValue + 1)
     }
   }
 
@@ -63,7 +74,7 @@ function DemoPlayer(props) {
   useEffect(() => {
     const boundingBox = ref?.current?.getBoundingClientRect?.();
     setImgWidth(boundingBox.width)
-  }, []);
+  });
 
   return (
     <Box
@@ -78,6 +89,7 @@ function DemoPlayer(props) {
         path={process.env.PUBLIC_URL + "/overviews/de_inferno.jpg"}
       />
       {renderPlayers(props.states[currentIdx].players, imgWidth)}
+      {renderGrenades(props.states[currentIdx].grenades, props.states[currentIdx].grenadeExplodes, imgWidth)}
       <Box display="flex" justifyContent="center">
         <IconButton color="primary" size="large">
           <PlayCircleFilledIcon

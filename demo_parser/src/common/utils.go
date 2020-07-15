@@ -30,6 +30,9 @@ func CreateMatchStruct(p dem.Parser, frameFactor int) (header common_dem.DemoHea
 		RoundStarts: make([]RoundStart, 0),
 		States:      make([]FrameState, frames+10),
 	}
+	for i := range match.States {
+		match.States[i].GrenadeExplodes = make([]int64, 0)
+	}
 	return
 }
 
@@ -60,8 +63,11 @@ func AddStates(p dem.Parser, header common_dem.DemoHeader, match *Match) {
 
 		idx := AdjustFrameIndex(p.CurrentFrame(), match.FrameFactor)
 		currentTime := int(float64(p.CurrentTime()) / math.Pow(10, 9))
+		grenades := GetGrenadeProjectile(p.GameState(), *match)
+
 		match.States[idx].Players = players
 		match.States[idx].Time = currentTime
+		match.States[idx].Grenades = grenades
 	}
 }
 
@@ -102,4 +108,20 @@ func GetRoundTime(gameState dem.GameState) int {
 	roundtime, _ := strconv.ParseFloat(gameState.ConVars()["mp_roundtime_defuse"], 64)
 	freezetime, _ := strconv.Atoi(gameState.ConVars()["mp_freezetime"])
 	return int(roundtime*60) + freezetime
+}
+
+// GetGrenadeProjectile function
+func GetGrenadeProjectile(gameState dem.GameState, match Match) (grenades []Grenade) {
+	projectiles := gameState.GrenadeProjectiles()
+	grenades = make([]Grenade, 0)
+	for _, grenade := range projectiles {
+		scaledX, scaledY := metadata.MapNameToMap[match.MapName].TranslateScale(grenade.Position().X, grenade.Position().Y)
+		grenades = append(grenades, Grenade{
+			X:          scaledX,
+			Y:          scaledY,
+			Equipament: int(grenade.WeaponInstance.Type),
+			ID:         grenade.WeaponInstance.UniqueID(),
+		})
+	}
+	return grenades
 }
