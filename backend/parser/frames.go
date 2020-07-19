@@ -4,6 +4,7 @@ import (
 	"math"
 	"time"
 
+	"github.com/golang/geo/r2"
 	models "github.com/marcelogdeandrade/csgo_demo_viewer/parser/models"
 	"github.com/markus-wa/demoinfocs-golang/metadata"
 	dem "github.com/markus-wa/demoinfocs-golang/v2/pkg/demoinfocs"
@@ -36,6 +37,10 @@ func IterateFrames(p dem.Parser, match *models.Match) {
 		// Add Grenades
 		grenades := getGrenadeProjectile(gameState, match.MapName)
 		match.Frames[idx].Grenades = grenades
+
+		// Add Infernos
+		infernos := getInfernos(gameState, match.MapName)
+		match.Frames[idx].Infernos = infernos
 	}
 }
 
@@ -56,14 +61,16 @@ func iterateTeam(teamState common.TeamState, team models.Team, mapName string) (
 
 		position := member.Position()
 		scaledX, scaledY := metadata.MapNameToMap[mapName].TranslateScale(position.X, position.Y)
+		viewDirection := member.ViewDirectionX()
 		name := member.Name
 		id := member.SteamID32()
 		player := models.Player{
-			ID:   id,
-			X:    scaledX,
-			Y:    scaledY,
-			Name: name,
-			Team: team,
+			ID:            id,
+			X:             scaledX,
+			Y:             scaledY,
+			Name:          name,
+			ViewDirection: viewDirection,
+			Team:          team,
 		}
 		players = append(players, player)
 	}
@@ -83,5 +90,25 @@ func getGrenadeProjectile(gameState dem.GameState, mapName string) (grenades []m
 			Exploded:   false,
 		})
 	}
-	return grenades
+	return
+}
+
+func getInfernos(gameState dem.GameState, mapName string) (infernos []models.Inferno) {
+	stateInfernos := gameState.Infernos()
+	infernos = make([]models.Inferno, 0)
+	for _, inferno := range stateInfernos {
+		hull := inferno.Fires().ConvexHull2D()
+		positions := make([]r2.Point, 0)
+		for _, v := range hull {
+			scaledX, scaledY := metadata.MapNameToMap[mapName].TranslateScale(v.X, v.Y)
+			positions = append(positions, r2.Point{
+				X: scaledX,
+				Y: scaledY,
+			})
+		}
+		infernos = append(infernos, models.Inferno{
+			Positions: positions,
+		})
+	}
+	return
 }

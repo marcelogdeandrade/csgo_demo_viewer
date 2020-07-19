@@ -5,6 +5,7 @@ type Frame struct {
 	Players  []Player
 	Kills    []Kill
 	Grenades []Grenade
+	Infernos []Inferno
 	Round    int
 	Time     int
 }
