@@ -8,4 +8,5 @@ type Player struct {
 	ViewDirection float32
 	Name          string
 	Team          Team
+	IsAlive       bool
 }

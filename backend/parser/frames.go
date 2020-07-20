@@ -62,6 +62,7 @@ func iterateTeam(teamState common.TeamState, team models.Team, mapName string) (
 		position := member.Position()
 		scaledX, scaledY := metadata.MapNameToMap[mapName].TranslateScale(position.X, position.Y)
 		viewDirection := member.ViewDirectionX()
+		isAlive := member.IsAlive()
 		name := member.Name
 		id := member.SteamID32()
 		player := models.Player{
@@ -71,6 +72,7 @@ func iterateTeam(teamState common.TeamState, team models.Team, mapName string) (
 			Name:          name,
 			ViewDirection: viewDirection,
 			Team:          team,
+			IsAlive:       isAlive,
 		}
 		players = append(players, player)
 	}
@@ -86,7 +88,7 @@ func getGrenadeProjectile(gameState dem.GameState, mapName string) (grenades []m
 			X:          scaledX,
 			Y:          scaledY,
 			Equipament: grenade.WeaponInstance.Type.String(),
-			ID:         grenade.Entity.ID(),
+			ID:         grenade.WeaponInstance.UniqueID(),
 			Exploded:   false,
 		})
 	}

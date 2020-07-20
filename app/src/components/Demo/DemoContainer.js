@@ -43,7 +43,6 @@ function DemoContainer(props) {
     setCurrentRound(0)
   }, [id]);
 
-  console.log(demo)
   return (
     <Box>
       {roundFrames ?

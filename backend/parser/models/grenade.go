@@ -5,6 +5,6 @@ type Grenade struct {
 	X          float64
 	Y          float64
 	Equipament string
-	ID         int
+	ID         int64
 	Exploded   bool
 }

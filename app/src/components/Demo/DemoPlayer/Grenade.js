@@ -15,16 +15,14 @@ const colors = {
 function Grenade(props) {
     const { grenade, positionMultipler } = props
     const isExploded = grenade.Exploded
-    const baseSize = isExploded ? constants.GRANEDE_SIZE_EXPLODED : constants.GRANEDE_SIZE
+    const baseSize = isExploded ? constants.GRENADE_SIZE_EXPLODED : constants.GRENADE_SIZE
     const x = (grenade.X - baseSize / 2 - 5) * positionMultipler
     const y = (grenade.Y - baseSize / 2 + 5) * positionMultipler
     const grenadeSize = baseSize * positionMultipler
     const fadeValue = isExploded ? 0.7 : 1
 
-    console.log(grenade)
     return (
         <Box
-            zIndex={1000}
             left={x}
             top={y}
             position="absolute"

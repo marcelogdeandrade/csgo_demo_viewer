@@ -33,6 +33,7 @@ func CreateMatch(p dem.Parser, frameFactor int) *models.Match {
 			Players:  make([]models.Player, 0),
 			Kills:    make([]models.Kill, 0),
 			Grenades: make([]models.Grenade, 0),
+			Infernos: make([]models.Inferno, 0),
 		}
 	}
 	return match

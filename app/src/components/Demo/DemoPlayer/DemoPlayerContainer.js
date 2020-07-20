@@ -4,6 +4,7 @@ import DemoPlayer from './DemoPlayer'
 import Player from './Player'
 import Grenade from './Grenade'
 import constants from '../../../constants'
+import Inferno from './Inferno';
 
 const getImagePath = (mapName) => {
   return process.env.PUBLIC_URL + "/maps/" + mapName + ".jpg"
@@ -16,13 +17,19 @@ const calculatePositionMultiplier = (initialSize, currentSize) => {
 const getPlayers = (frames, currentIdx) => {
   if (!frames) return []
   if (currentIdx >= frames.length) return []
-  return frames[currentIdx].Players
+  return frames[currentIdx].Players.filter(player => player.IsAlive)
 }
 
 const getGrenades = (frames, currentIdx) => {
   if (!frames) return []
   if (currentIdx >= frames.length) return []
   return frames[currentIdx].Grenades
+}
+
+const getInfernos = (frames, currentIdx) => {
+  if (!frames) return []
+  if (currentIdx >= frames.length) return []
+  return frames[currentIdx].Infernos
 }
 
 const getCurrentTime = (frames, currentIdx) => {
@@ -40,6 +47,7 @@ function DemoPlayerContainer(props) {
   const [currentIdx, setCurrentIdx] = useState(0)
   const [players, setPlayers] = useState(getPlayers(roundFrames.frames, 0))
   const [grenades, setGrenades] = useState(getGrenades(roundFrames.frames, 0))
+  const [infernos, setInfernos] = useState(getInfernos(roundFrames.frames, 0))
   const [currentTime, setCurrentTime] = useState(getCurrentTime(roundFrames.frames, 0))
   const [imgWidth, setImgWidth] = useState(null)
   const ref = useRef(null);
@@ -66,6 +74,17 @@ function DemoPlayerContainer(props) {
     } return []
   }
 
+  const renderInfernos = () => {
+    if (infernos) {
+      return infernos.map(inferno => {
+        return <Inferno
+          inferno={inferno}
+          positionMultipler={calculatePositionMultiplier(constants.IMG_SIZE, imgWidth)}
+        />
+      })
+    }
+  }
+
   useEffect(() => {
     setCurrentIdx(0)
   }, [roundFrames]);
@@ -73,6 +92,7 @@ function DemoPlayerContainer(props) {
   useEffect(() => {
     setPlayers(getPlayers(roundFrames.frames, currentIdx))
     setGrenades(getGrenades(roundFrames.frames, currentIdx))
+    setInfernos(getInfernos(roundFrames.frames, currentIdx))
     setCurrentTime(getCurrentTime(roundFrames.frames, currentIdx))
   }, [currentIdx, roundFrames]);
 
@@ -92,6 +112,7 @@ function DemoPlayerContainer(props) {
         setImgWidthCallback={setImgWidth}
         renderPlayers={renderPlayers}
         renderGrenades={renderGrenades}
+        renderInfernos={renderInfernos}
         changeFrame={(value) => changeFrame(setCurrentIdx, value)}
         currentIdx={currentIdx}
         maxFrames={roundFrames.frames.length - 1}

@@ -29,17 +29,10 @@ func RegisterEventHandlers(p dem.Parser, match *models.Match) {
 	})
 	p.RegisterEventHandler(func(e events.SmokeStart) {
 		idx := AdjustFrameIndex(p.CurrentFrame(), match.FrameFactor)
+		grenade := e.Grenade
 		grenadeExplosion := models.GrenadeExplosion{
 			Frame:     idx,
-			GrenadeID: e.GrenadeEntityID,
-		}
-		match.GrenadeExplosions = append(match.GrenadeExplosions, grenadeExplosion)
-	})
-	p.RegisterEventHandler(func(e events.FireGrenadeStart) {
-		idx := AdjustFrameIndex(p.CurrentFrame(), match.FrameFactor)
-		grenadeExplosion := models.GrenadeExplosion{
-			Frame:     idx,
-			GrenadeID: e.GrenadeEntityID,
+			GrenadeID: grenade.UniqueID(),
 		}
 		match.GrenadeExplosions = append(match.GrenadeExplosions, grenadeExplosion)
 	})

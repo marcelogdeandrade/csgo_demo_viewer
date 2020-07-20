@@ -1,25 +1,47 @@
 import React from 'react'
 import Box from '@material-ui/core/Box';
 import constants from '../../../constants'
+import { makeStyles } from '@material-ui/core/styles';
+import TollTwoToneIcon from '@material-ui/icons/TollTwoTone';
+
+const useStyles = makeStyles({
+  direction: props => ({
+    position: "absolute",
+    transform: `rotate(${-parseInt(props.viewDirection) - 180}deg)`,
+    left: props.left,
+    top: props.top,
+    color: props.backgroundColor
+  })
+})
 
 function Player(props) {
-    const { player, positionMultipler } = props
-    const playerSize = constants.PLAYER_SIZE * positionMultipler
-    const x = (player.X - 5 - playerSize / 2) * positionMultipler
-    const y = (player.Y + 5 - playerSize / 2) * positionMultipler
-    return (
-        <Box
-            left={x}
-            top={y}
-            position="absolute"
-            bgcolor={player.Team === "Terrorists" ? "green" : "red"}
-            borderRadius="50%"
-            margin="auto"
-            textAlign="center"
-            width={playerSize}
-            height={playerSize}
-        />
-    )
+  const { player, positionMultipler } = props
+  const playerSize = constants.PLAYER_SIZE * positionMultipler
+  const x = (player.X - 5 - playerSize / 2) * positionMultipler
+  const y = (player.Y + 5 - playerSize / 2) * positionMultipler
+  const styleProps = {
+    viewDirection: props.player.ViewDirection,
+    left: x,
+    top: y,
+    backgroundColor: player.Team === "Terrorists" ? "red" : "green",
+    playerSize: playerSize
+  }
+  const classes = useStyles(styleProps);
+
+  return (
+    <Box>
+      <TollTwoToneIcon
+        className={classes.direction}
+      // left={x + playerSize / 2}
+      // top={y}
+      // bgcolor={player.Team === "Terrorists" ? "green" : "red"}
+      // margin="auto"
+      // textAlign="center"
+      // width={playerSize}
+      // height={playerSize}
+      />
+    </Box>
+  )
 }
 
 export default Player

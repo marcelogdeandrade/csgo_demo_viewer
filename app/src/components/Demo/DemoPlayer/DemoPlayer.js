@@ -9,8 +9,9 @@ function DemoPlayer(props) {
     <Box>
       <RoundTime currentTime={props.currentTime} />
       <Image path={props.mapPath} />
-      {props.renderPlayers()}
+      {props.renderInfernos()}
       {props.renderGrenades()}
+      {props.renderPlayers()}
       <Slider
         onChange={(e, value) => props.changeFrame(value)}
         min={0}
