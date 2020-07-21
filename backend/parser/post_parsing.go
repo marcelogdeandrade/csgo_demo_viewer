@@ -9,6 +9,7 @@ func PostParsingAdjustments(match *models.Match) {
 	calcRounds(match)
 	calcGrenadeExplosions(match)
 	calcFrameTime(match)
+	calcScores(match)
 }
 
 func calcRounds(match *models.Match) {
@@ -66,4 +67,24 @@ func calcFrameTime(match *models.Match) {
 			match.Frames[idx].Time = frameTime
 		}
 	}
+}
+
+func calcScores(match *models.Match) {
+	scores := match.Scores
+	for idx := range match.Frames {
+		currentScores := getCurrentScore(idx, scores)
+		match.Frames[idx].CounterTerrorists.Score = currentScores[match.Frames[idx].CounterTerrorists.ID]
+		match.Frames[idx].Terrorists.Score = currentScores[match.Frames[idx].Terrorists.ID]
+	}
+}
+
+func getCurrentScore(currentFrame int, scores []models.Score) (currentScores map[int]int) {
+	currentScores = make(map[int]int)
+	for _, score := range scores {
+		if score.Frame > currentFrame {
+			return
+		}
+		currentScores[score.TeamID] = score.Value
+	}
+	return
 }

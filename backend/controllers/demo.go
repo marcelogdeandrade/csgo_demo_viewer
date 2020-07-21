@@ -8,6 +8,7 @@ import (
 
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/marcelogdeandrade/csgo_demo_viewer/db"
 	"github.com/marcelogdeandrade/csgo_demo_viewer/models"
 	"github.com/marcelogdeandrade/csgo_demo_viewer/parser"
@@ -27,7 +28,8 @@ func UploadDemo(c *gin.Context, sess *session.Session) {
 	match := parser.Parse(src)
 
 	// Save match on db
-	db.SaveMatch(match.MapName, "frames_teste.json")
+	matchID := uuid.New().String()
+	db.SaveMatch(match, matchID)
 
 	// Transform to JSON
 	framesJSON, err := json.Marshal(match)
@@ -35,7 +37,7 @@ func UploadDemo(c *gin.Context, sess *session.Session) {
 	r := bytes.NewReader(framesJSON)
 
 	// Upload result to S3
-	UploadFile("frames_teste.json", r, sess)
+	UploadFile(matchID, r, sess)
 }
 
 // GetDemo function

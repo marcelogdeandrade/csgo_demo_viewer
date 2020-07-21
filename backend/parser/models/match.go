@@ -4,6 +4,7 @@ package parsermodels
 type Match struct {
 	FrameFactor       int
 	MapName           string
+	Scores            []Score
 	Frames            []Frame
 	Rounds            []Round
 	GrenadeExplosions []GrenadeExplosion

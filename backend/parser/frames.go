@@ -41,6 +41,24 @@ func IterateFrames(p dem.Parser, match *models.Match) {
 		// Add Infernos
 		infernos := getInfernos(gameState, match.MapName)
 		match.Frames[idx].Infernos = infernos
+
+		// Add CT
+		ct := getTeam(*gameState.TeamCounterTerrorists())
+		match.Frames[idx].CounterTerrorists = ct
+
+		// Add TR
+		tr := getTeam(*gameState.TeamTerrorists())
+		match.Frames[idx].Terrorists = tr
+	}
+}
+
+func getTeam(team common.TeamState) models.Team {
+	name := team.ClanName()
+	id := team.ID()
+	return models.Team{
+		Name:  name,
+		ID:    id,
+		Score: 0,
 	}
 }
 
@@ -56,7 +74,7 @@ func getPlayers(gameState dem.GameState, mapName string) []models.Player {
 	return players
 }
 
-func iterateTeam(teamState common.TeamState, team models.Team, mapName string) (players []models.Player) {
+func iterateTeam(teamState common.TeamState, team models.TeamSide, mapName string) (players []models.Player) {
 	for _, member := range teamState.Members() {
 
 		position := member.Position()

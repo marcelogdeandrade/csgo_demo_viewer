@@ -7,6 +7,6 @@ type Player struct {
 	Y             float64
 	ViewDirection float32
 	Name          string
-	Team          Team
+	Team          TeamSide
 	IsAlive       bool
 }

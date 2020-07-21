@@ -36,4 +36,15 @@ func RegisterEventHandlers(p dem.Parser, match *models.Match) {
 		}
 		match.GrenadeExplosions = append(match.GrenadeExplosions, grenadeExplosion)
 	})
+	p.RegisterEventHandler(func(e events.ScoreUpdated) {
+		idx := AdjustFrameIndex(p.CurrentFrame(), match.FrameFactor)
+		newScore := e.NewScore
+		teamID := e.TeamState.ID()
+		score := models.Score{
+			TeamID: teamID,
+			Value:  newScore,
+			Frame:  idx,
+		}
+		match.Scores = append(match.Scores, score)
+	})
 }
