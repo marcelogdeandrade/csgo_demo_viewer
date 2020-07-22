@@ -26,8 +26,7 @@ function Menu() {
     <Drawer
       className={classes.drawer}
       variant="permanent"
-      anchor="left"
-    >
+      anchor="left">
       <List>
         <ListItem
           onClick={() => history.push("/upload/")}

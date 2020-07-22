@@ -19,7 +19,7 @@ function DemoListContainer() {
     }, []);
 
     return (
-        <Box>
+        <Box width="1000px">
             {demos ? <DemoList demos={demos} /> : <Loading />}
         </Box>
     )

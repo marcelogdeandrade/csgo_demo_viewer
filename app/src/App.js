@@ -10,30 +10,40 @@ import {
 import Menu from './components/Menu/Menu'
 import './App.css';
 import 'fontsource-roboto';
-import { Grid } from '@material-ui/core';
+import { Grid, Box } from '@material-ui/core';
+import AppBar from './components/AppBar/AppBar'
+import { makeStyles } from '@material-ui/core/styles';
+
+const drawerWidth = 240
+
+const useStyles = makeStyles((theme) => ({
+  appBar: {
+    width: `calc(100% - ${drawerWidth}px)`,
+    marginLeft: drawerWidth,
+  },
+}));
+
+
 
 function App() {
+  const classes = useStyles();
   return (
     <Router>
       <Grid
-        container
-        justify="center"
-        direction="row">
-        <Grid
-          item xs={5}>
-          <Menu />
-          <Switch>
-            <Route path="/upload">
-              <UploadDemoContainer />
-            </Route>
-            <Route path="/demos">
-              <DemoListContainer />
-            </Route>
-            <Route path="/demo/:id">
-              <DemoContainer />
-            </Route>
-          </Switch>
-        </Grid>
+        container>
+        {/* <AppBar /> */}
+        <Menu />
+        <Switch>
+          <Route path="/upload">
+            <UploadDemoContainer />
+          </Route>
+          <Route path="/demos">
+            <DemoListContainer />
+          </Route>
+          <Route path="/demo/:id">
+            <DemoContainer />
+          </Route>
+        </Switch>
       </Grid>
     </Router>
   );

@@ -1,18 +1,37 @@
 import React from 'react'
 import DemoDetail from './DemoDetails'
+import List from '@material-ui/core/List';
+import { makeStyles } from '@material-ui/core/styles';
 
-const renderDemos = (demos) => {
-    return demos.map(demo => {
-        return <DemoDetail demo={demo} />
-    })
-}
+const useStyles = makeStyles((theme) => ({
+  listItem: {
+    padding: 10
+  }
+}));
+
+
+
 
 function DemoList(props) {
-    return (
-        <div>
-            {renderDemos(props.demos.data)}
+  const classes = useStyles()
+
+  const renderDemos = (demos) => {
+    return demos.map(demo => {
+      return (
+        <div className={classes.listItem}>
+          <DemoDetail
+            demo={demo} />
         </div>
-    )
+
+      )
+    })
+  }
+
+  return (
+    <List >
+      {renderDemos(props.demos.data)}
+    </List >
+  )
 }
 
 export default DemoList

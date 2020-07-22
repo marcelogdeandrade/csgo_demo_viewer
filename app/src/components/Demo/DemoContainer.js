@@ -43,9 +43,9 @@ function DemoContainer(props) {
     setCurrentRound(0)
   }, [id]);
 
-  console.log(demo)
   return (
-    <Box>
+    <Box
+      maxWidth="800px">
       {roundFrames ?
         <Demo
           demo={demo}

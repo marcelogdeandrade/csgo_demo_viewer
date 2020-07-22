@@ -103,7 +103,6 @@ function DemoPlayerContainer(props) {
 
   return (
     <Box
-      maxWidth="100%"
       maxHeight="100%"
       position="relative"
       ref={ref}>
