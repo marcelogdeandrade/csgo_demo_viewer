@@ -51,6 +51,7 @@ function DemoPlayerContainer(props) {
   const [currentTime, setCurrentTime] = useState(getCurrentTime(roundFrames.frames, 0))
   const [imgWidth, setImgWidth] = useState(null)
   const ref = useRef(null);
+  const boudingBoxCheck = ref?.current?.getBoundingClientRect?.()
 
   const renderPlayers = () => {
     if (players) {
@@ -99,7 +100,7 @@ function DemoPlayerContainer(props) {
   useEffect(() => {
     const boundingBox = ref?.current?.getBoundingClientRect?.();
     setImgWidth(boundingBox.width)
-  }, [ref?.current?.getBoundingClientRect?.()]);
+  }, [boudingBoxCheck]);
 
   return (
     <Box

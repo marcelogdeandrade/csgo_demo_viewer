@@ -79,18 +79,18 @@ func iterateTeam(teamState common.TeamState, team models.TeamSide, mapName strin
 
 		position := member.Position()
 		scaledX, scaledY := metadata.MapNameToMap[mapName].TranslateScale(position.X, position.Y)
-		viewDirection := member.ViewDirectionX()
-		isAlive := member.IsAlive()
-		name := member.Name
-		id := member.SteamID32()
 		player := models.Player{
-			ID:            id,
+			ID:            member.SteamID32(),
 			X:             scaledX,
 			Y:             scaledY,
-			Name:          name,
-			ViewDirection: viewDirection,
+			Name:          member.Name,
+			ViewDirection: member.ViewDirectionX(),
 			Team:          team,
-			IsAlive:       isAlive,
+			IsAlive:       member.IsAlive(),
+			Health:        member.Health(),
+			Kills:         member.Kills(),
+			Deaths:        member.Deaths(),
+			Assists:       member.Assists(),
 		}
 		players = append(players, player)
 	}

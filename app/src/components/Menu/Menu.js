@@ -1,53 +1,43 @@
 import React from 'react'
+import { AppBar, Toolbar, Typography, Button } from '@material-ui/core/';
 import { makeStyles } from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import PublishIcon from '@material-ui/icons/Publish';
-import ListIcon from '@material-ui/icons/List';
 import { useHistory } from "react-router-dom";
 
-const drawerWidth = 240;
-
 const useStyles = makeStyles((theme) => ({
-  drawer: {
-    width: drawerWidth,
-    flexShrink: 0,
+  title: {
+    flexGrow: 1,
   },
+  button: {
+    marginRight: 10,
+  }
 }));
+
 
 function Menu() {
   const classes = useStyles();
   const history = useHistory();
 
   return (
-    <Drawer
-      className={classes.drawer}
-      variant="permanent"
-      anchor="left">
-      <List>
-        <ListItem
-          onClick={() => history.push("/upload/")}
-          button
-          key={"upload"}>
-          <ListItemIcon>
-            <PublishIcon />
-          </ListItemIcon>
-          <ListItemText primary={"Upload Demo"} />
-        </ListItem>
-        <ListItem
-          onClick={() => history.push("/demos/")}
-          button
-          key={"demos"}>
-          <ListItemIcon>
-            <ListIcon />
-          </ListItemIcon>
-          <ListItemText primary={"View demos"} />
-        </ListItem>
-      </List>
-    </Drawer>
+    <AppBar position="static">
+      <Toolbar>
+        <Typography variant="h6" className={classes.title}>
+          CSGO Demos
+        </Typography>
+        <Button
+          className={classes.button}
+          variant="contained"
+          color="primary"
+          onClick={() => history.push("/upload/")}>
+          Upload
+            </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => history.push("/demos/")}>
+          Demos
+          </Button>
+      </Toolbar>
+    </AppBar>
   )
 }
 

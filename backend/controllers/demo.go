@@ -19,6 +19,10 @@ func UploadDemo(c *gin.Context, sess *session.Session) {
 	// single file
 	file, _ := c.FormFile("file")
 
+	// Demo Date
+	date := c.PostForm("date")
+	fmt.Println(date)
+
 	// Open file
 	src, err := file.Open()
 	parser.CheckError(err)

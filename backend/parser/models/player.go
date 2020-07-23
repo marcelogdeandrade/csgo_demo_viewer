@@ -9,4 +9,8 @@ type Player struct {
 	Name          string
 	Team          TeamSide
 	IsAlive       bool
+	Health        int
+	Kills         int
+	Deaths        int
+	Assists       int
 }

@@ -2,10 +2,11 @@ import React, { useState } from 'react'
 import UploadDemo from './UploadDemo'
 import Loading from '../Loading/Loading'
 
-const uploadDemoCallback = (c, setIsLoading) => {
+const uploadDemoCallback = (c, setIsLoading, selectedDate) => {
   const file = c.target.files[0]
   const formData = new FormData();
-  formData.append("file", file, "upload_teste.dem")
+  formData.append("file", file, "demo.dem")
+  formData.append("date", selectedDate)
   const url = "http://localhost:8080/upload_demo"
   setIsLoading(true)
   fetch(url, {
@@ -18,8 +19,13 @@ const uploadDemoCallback = (c, setIsLoading) => {
 
 }
 
+const handleDateChange = (date, setSelectedDate) => {
+  setSelectedDate(date);
+};
+
 function UploadDemoContainer() {
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(new Date('2020-01-01T21:11:54'));
 
   return (
     <div>
@@ -28,7 +34,9 @@ function UploadDemoContainer() {
           <Loading />
           :
           <UploadDemo
-            onFormSubmit={(event) => uploadDemoCallback(event, setIsLoading)}
+            onFormSubmit={(event) => uploadDemoCallback(event, setIsLoading, selectedDate)}
+            handleDateChange={(date) => handleDateChange(date, setSelectedDate)}
+            selectedDate={selectedDate}
           />
       }
     </div>
