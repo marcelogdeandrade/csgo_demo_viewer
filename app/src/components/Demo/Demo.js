@@ -1,18 +1,18 @@
 import React from 'react'
 import DemoPlayerContainer from './DemoPlayer/DemoPlayerContainer'
 import RoundSlider from './RoundsSlider'
-import Grid from '@material-ui/core/Grid';
-
+import { Grid } from '@material-ui/core/';
 
 function Demo(props) {
   return (
     <Grid
-      direction="column"
+      direction="row"
       container
       justify="center"
     >
       <Grid
-        item xs={12}>
+        item
+        xs={10}>
         <DemoPlayerContainer
           mapName={props.mapName}
           roundFrames={props.roundFrames}

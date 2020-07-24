@@ -19,19 +19,23 @@ function App() {
         container
         justify="center">
         <Menu />
-        <Grid item>
-          <Switch>
-            <Route path="/upload">
+        <Switch>
+          <Route path="/upload">
+            <Grid item>
               <UploadDemoContainer />
-            </Route>
-            <Route path="/demos">
+            </Grid>
+          </Route>
+          <Route path="/demos">
+            <Grid item>
               <DemoListContainer />
-            </Route>
-            <Route path="/demo/:id">
+            </Grid>
+          </Route>
+          <Route path="/demo/:id">
+            <Grid item xs={12}>
               <DemoContainer />
-            </Route>
-          </Switch>
-        </Grid>
+            </Grid>
+          </Route>
+        </Switch>
       </Grid>
     </Router>
   );

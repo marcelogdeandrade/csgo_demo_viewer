@@ -1,10 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react'
-import Box from '@material-ui/core/Box';
+import { Box, Grid } from '@material-ui/core/';
 import DemoPlayer from './DemoPlayer'
 import Player from './Player'
 import Grenade from './Grenade'
 import constants from '../../../constants'
 import Inferno from './Inferno';
+import TeamPlayerInfo from './PlayerInfo/TeamPlayerInfo'
 
 const getImagePath = (mapName) => {
   return process.env.PUBLIC_URL + "/maps/" + mapName + ".jpg"
@@ -17,7 +18,7 @@ const calculatePositionMultiplier = (initialSize, currentSize) => {
 const getPlayers = (frames, currentIdx) => {
   if (!frames) return []
   if (currentIdx >= frames.length) return []
-  return frames[currentIdx].Players.filter(player => player.IsAlive)
+  return frames[currentIdx].Players
 }
 
 const getGrenades = (frames, currentIdx) => {
@@ -42,6 +43,18 @@ const changeFrame = (setCurrentIdx, value) => {
   setCurrentIdx(value)
 }
 
+const getCts = (players) => {
+  return players
+    .filter(player => player.Team === "Counter-Terrorists")
+    .sort((a, b) => a.ID - b.ID)
+}
+
+const getTrs = (players) => {
+  return players
+    .filter(player => player.Team === "Terrorists")
+    .sort((a, b) => a.ID - b.ID)
+}
+
 function DemoPlayerContainer(props) {
   const { mapName, roundFrames } = props
   const [currentIdx, setCurrentIdx] = useState(0)
@@ -55,12 +68,14 @@ function DemoPlayerContainer(props) {
 
   const renderPlayers = () => {
     if (players) {
-      return players.map(player => {
-        return <Player
-          player={(player)}
-          positionMultipler={calculatePositionMultiplier(constants.IMG_SIZE, imgWidth)}
-        />
-      })
+      return players
+        .filter(player => player.IsAlive)
+        .map(player => {
+          return <Player
+            player={(player)}
+            positionMultipler={calculatePositionMultiplier(constants.IMG_SIZE, imgWidth)}
+          />
+        })
     } return []
   }
 
@@ -102,23 +117,45 @@ function DemoPlayerContainer(props) {
     setImgWidth(boundingBox.width)
   }, [boudingBoxCheck]);
 
+  getCts(players)
+
   return (
-    <Box
-      maxHeight="100%"
-      position="relative"
-      ref={ref}>
-      <DemoPlayer
-        mapPath={getImagePath(mapName)}
-        setImgWidthCallback={setImgWidth}
-        renderPlayers={renderPlayers}
-        renderGrenades={renderGrenades}
-        renderInfernos={renderInfernos}
-        changeFrame={(value) => changeFrame(setCurrentIdx, value)}
-        currentIdx={currentIdx}
-        maxFrames={roundFrames.frames.length - 1}
-        currentTime={currentTime}
-      />
-    </Box>
+    <Grid
+      direction="row"
+      container
+      justify="center">
+      <Grid item xs={2}>
+        <TeamPlayerInfo
+          players={getTrs(players)}
+          team="Terrorists"
+        />
+      </Grid>
+      <Grid item>
+        <Box
+          maxHeight="100%"
+          maxWidth="800px"
+          position="relative"
+          ref={ref}>
+          <DemoPlayer
+            mapPath={getImagePath(mapName)}
+            setImgWidthCallback={setImgWidth}
+            renderPlayers={renderPlayers}
+            renderGrenades={renderGrenades}
+            renderInfernos={renderInfernos}
+            changeFrame={(value) => changeFrame(setCurrentIdx, value)}
+            currentIdx={currentIdx}
+            maxFrames={roundFrames.frames.length - 1}
+            currentTime={currentTime}
+          />
+        </Box>
+      </Grid>
+      <Grid xs={2} justify="center">
+        <TeamPlayerInfo
+          players={getCts(players)}
+          team="Counter-Terrorists" />
+      </Grid>
+
+    </Grid>
   )
 }
 

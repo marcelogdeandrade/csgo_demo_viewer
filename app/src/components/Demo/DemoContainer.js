@@ -44,8 +44,7 @@ function DemoContainer(props) {
   }, [id]);
 
   return (
-    <Box
-      maxWidth="800px">
+    <Box>
       {roundFrames ?
         <Demo
           demo={demo}
