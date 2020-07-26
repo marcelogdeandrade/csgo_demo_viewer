@@ -7,4 +7,5 @@ type TeamSide string
 const (
 	TeamTerrorists        TeamSide = "Terrorists"
 	TeamCounterTerrorists TeamSide = "Counter-Terrorists"
+	Unknown               TeamSide = "Unknown"
 )

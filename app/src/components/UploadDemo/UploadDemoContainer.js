@@ -13,7 +13,6 @@ const uploadDemoCallback = (c, setIsLoading, selectedDate) => {
     method: "POST",
     body: formData
   })
-    .then(response => console.log(response))
     .then(_ => setIsLoading(false))
     .catch(err => console.log(err))
 

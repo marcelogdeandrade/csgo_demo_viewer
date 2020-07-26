@@ -7,9 +7,12 @@ import (
 //PostParsingAdjustments function
 func PostParsingAdjustments(match *models.Match) {
 	calcRounds(match)
+	calcFreezetimeRound(match)
+	calcIsFreezetime(match)
 	calcGrenadeExplosions(match)
 	calcFrameTime(match)
 	calcScores(match)
+	calcRoundEndWinner(match)
 }
 
 func calcRounds(match *models.Match) {
@@ -62,9 +65,16 @@ func calcFrameTime(match *models.Match) {
 		currentRound := match.Frames[idx].Round
 		if currentRound >= 0 {
 			roundTime := rounds[currentRound].StartTime
-			startRoundFrameTime := match.Frames[rounds[currentRound].Frame].Time
-			frameTime := roundTime - (match.Frames[idx].Time - startRoundFrameTime)
-			match.Frames[idx].Time = frameTime
+			if match.Frames[idx].IsFreezeTime {
+				match.Frames[idx].Time = roundTime
+			} else {
+				freezetimeEndFrame := rounds[currentRound].FreezetimeFrame
+				frameTime := roundTime - (match.Frames[idx].TimeElapsed - match.Frames[freezetimeEndFrame].TimeElapsed)
+				if frameTime < 0 {
+					frameTime = 0
+				}
+				match.Frames[idx].Time = frameTime
+			}
 		}
 	}
 }
@@ -87,4 +97,48 @@ func getCurrentScore(currentFrame int, scores []models.Score) (currentScores map
 		currentScores[score.TeamID] = score.Value
 	}
 	return
+}
+
+func calcFreezetimeRound(match *models.Match) {
+	for roundIdx := range match.Rounds {
+		roundStartFrame := match.Rounds[roundIdx].Frame
+		for freezetimeIdx := range match.Freezetimes {
+			if match.Freezetimes[freezetimeIdx].Frame > roundStartFrame {
+				match.Rounds[roundIdx].FreezetimeFrame = match.Freezetimes[freezetimeIdx].Frame
+				break
+			}
+		}
+	}
+}
+
+func calcIsFreezetime(match *models.Match) {
+	rounds := match.Rounds
+	for idx := range match.Frames {
+		currentRound := match.Frames[idx].Round
+		if currentRound >= 0 {
+			isFreezetime := getIsFreezetime(idx, rounds[currentRound])
+			match.Frames[idx].IsFreezeTime = isFreezetime
+		}
+	}
+}
+
+func getIsFreezetime(currentFrame int, currentRound models.Round) bool {
+	if currentFrame < currentRound.FreezetimeFrame {
+		return true
+	}
+	return false
+}
+
+func calcRoundEndWinner(match *models.Match) {
+	rounds := match.Rounds
+	roundEnds := match.RoundEnds
+	for idxRounds := range rounds {
+		for idxRoundEnds := range roundEnds {
+			if roundEnds[idxRoundEnds].Frame > rounds[idxRounds].Frame {
+				match.Rounds[idxRounds].Winner = roundEnds[idxRoundEnds].Winner
+				match.Rounds[idxRounds].RoundEndReason = roundEnds[idxRoundEnds].Reason
+				break
+			}
+		}
+	}
 }

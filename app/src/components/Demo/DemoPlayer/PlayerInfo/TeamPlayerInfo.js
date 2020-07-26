@@ -1,23 +1,32 @@
 import React from 'react'
 import PlayerInfoContainer from './PlayerInfoContainer'
 import { Typography } from '@material-ui/core/';
+import { makeStyles } from '@material-ui/core/styles';
 
-function TeamPlayerInfo({ players, team }) {
-    const renderPlayers = () => {
-        return players.map(player => {
-            return <PlayerInfoContainer player={player} />
-        })
-    }
+const useStyles = makeStyles((theme) => ({
+  root: {
+    marginRight: 20,
+    marginLeft: 20
+  }
+}));
 
-    return (
-        <div>
-            <Typography
-                color="secondary"
-                align="center"
-                variant="h5">{team}</Typography>
-            {renderPlayers()}
-        </div>
-    )
+function TeamPlayerInfo({ players, team, side }) {
+  const classes = useStyles()
+
+  const renderPlayers = () => {
+    return players.map(player => {
+      return <PlayerInfoContainer player={player} />
+    })
+  }
+
+  return (
+    <div className={classes.root}>
+      <Typography
+        align="center"
+        variant="overline">{side}</Typography>
+      {renderPlayers()}
+    </div>
+  )
 }
 
 export default TeamPlayerInfo

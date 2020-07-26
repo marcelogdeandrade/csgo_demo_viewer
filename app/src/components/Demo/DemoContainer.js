@@ -30,7 +30,7 @@ function DemoContainer(props) {
   const [roundFrames, setRoundFrames] = useState(null)
 
   const changeRound = (value) => {
-    setCurrentRound(value - 1)
+    setCurrentRound(value)
   }
 
   useEffect(() => {
@@ -50,6 +50,7 @@ function DemoContainer(props) {
           demo={demo}
           roundFrames={roundFrames}
           mapName={demo.MapName}
+          rounds={demo.Rounds}
           currentRound={currentRound}
           maxRounds={demo.Rounds.length}
           changeRoundCallback={changeRound}

@@ -23,7 +23,7 @@ function Player(props) {
     viewDirection: props.player.ViewDirection,
     left: x,
     top: y,
-    backgroundColor: player.Team === "Terrorists" ? "red" : "green",
+    backgroundColor: player.Team === "Terrorists" ? "#ba000d" : "#002984",
     playerSize: playerSize
   }
   const classes = useStyles(styleProps);
@@ -31,14 +31,8 @@ function Player(props) {
   return (
     <Box>
       <TollTwoToneIcon
+        fontSize="small"
         className={classes.direction}
-      // left={x + playerSize / 2}
-      // top={y}
-      // bgcolor={player.Team === "Terrorists" ? "green" : "red"}
-      // margin="auto"
-      // textAlign="center"
-      // width={playerSize}
-      // height={playerSize}
       />
     </Box>
   )

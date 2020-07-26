@@ -13,10 +13,20 @@ func RegisterEventHandlers(p dem.Parser, match *models.Match) {
 		roundTime := GetRoundTime(p.GameState())
 		if p.GameState().IsMatchStarted() {
 			round := models.Round{
-				StartTime: roundTime,
-				Frame:     idx,
+				StartTime:       roundTime,
+				FreezetimeFrame: idx,
+				Frame:           idx,
 			}
 			match.Rounds = append(match.Rounds, round)
+		}
+	})
+	p.RegisterEventHandler(func(e events.RoundFreezetimeEnd) {
+		idx := AdjustFrameIndex(p.CurrentFrame(), match.FrameFactor)
+		if p.GameState().IsMatchStarted() {
+			freezetime := models.Freezetime{
+				Frame: idx,
+			}
+			match.Freezetimes = append(match.Freezetimes, freezetime)
 		}
 	})
 	p.RegisterEventHandler(func(e events.Kill) {
@@ -46,5 +56,14 @@ func RegisterEventHandlers(p dem.Parser, match *models.Match) {
 			Frame:  idx,
 		}
 		match.Scores = append(match.Scores, score)
+	})
+	p.RegisterEventHandler(func(e events.RoundEnd) {
+		idx := AdjustFrameIndex(p.CurrentFrame(), match.FrameFactor)
+		roundEnd := models.RoundEnd{
+			Frame:  idx,
+			Winner: TranslateTeamStruct(e.Winner),
+			Reason: TranslateRoundEndReason(e.Reason),
+		}
+		match.RoundEnds = append(match.RoundEnds, roundEnd)
 	})
 }

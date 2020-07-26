@@ -7,5 +7,7 @@ type Match struct {
 	Scores            []Score
 	Frames            []Frame
 	Rounds            []Round
+	RoundEnds         []RoundEnd
+	Freezetimes       []Freezetime
 	GrenadeExplosions []GrenadeExplosion
 }

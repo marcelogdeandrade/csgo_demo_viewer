@@ -6,6 +6,7 @@ import Grenade from './Grenade'
 import constants from '../../../constants'
 import Inferno from './Inferno';
 import TeamPlayerInfo from './PlayerInfo/TeamPlayerInfo'
+import PlayerHeader from './PlayerHeader'
 
 const getImagePath = (mapName) => {
   return process.env.PUBLIC_URL + "/maps/" + mapName + ".jpg"
@@ -55,16 +56,31 @@ const getTrs = (players) => {
     .sort((a, b) => a.ID - b.ID)
 }
 
+const getTerroristTeam = (frames, currentIdx) => {
+  if (!frames) return ""
+  if (currentIdx >= frames.length) return ""
+  return frames[currentIdx].Terrorists
+}
+
+const getCounterTerroristsTeam = (frames, currentIdx) => {
+  if (!frames) return ""
+  if (currentIdx >= frames.length) return ""
+  return frames[currentIdx].CounterTerrorists
+}
+
 function DemoPlayerContainer(props) {
   const { mapName, roundFrames } = props
-  const [currentIdx, setCurrentIdx] = useState(0)
-  const [players, setPlayers] = useState(getPlayers(roundFrames.frames, 0))
-  const [grenades, setGrenades] = useState(getGrenades(roundFrames.frames, 0))
-  const [infernos, setInfernos] = useState(getInfernos(roundFrames.frames, 0))
-  const [currentTime, setCurrentTime] = useState(getCurrentTime(roundFrames.frames, 0))
+  const [currentIdx, setCurrentIdx] = useState(constants.ROUND_START_FRAME)
+  const [players, setPlayers] = useState(getPlayers(roundFrames.frames, constants.ROUND_START_FRAME))
+  const [terrorists, setTerrorists] = useState(getTerroristTeam(roundFrames.frames, constants.ROUND_START_FRAME))
+  const [counterTerrorists, setCounterTerrorists] = useState(getCounterTerroristsTeam(roundFrames.frames, constants.ROUND_START_FRAME))
+  const [grenades, setGrenades] = useState(getGrenades(roundFrames.frames, constants.ROUND_START_FRAME))
+  const [infernos, setInfernos] = useState(getInfernos(roundFrames.frames, constants.ROUND_START_FRAME))
+  const [currentTime, setCurrentTime] = useState(getCurrentTime(roundFrames.frames, constants.ROUND_START_FRAME))
   const [imgWidth, setImgWidth] = useState(null)
   const ref = useRef(null);
   const boudingBoxCheck = ref?.current?.getBoundingClientRect?.()
+
 
   const renderPlayers = () => {
     if (players) {
@@ -102,7 +118,7 @@ function DemoPlayerContainer(props) {
   }
 
   useEffect(() => {
-    setCurrentIdx(0)
+    setCurrentIdx(constants.ROUND_START_FRAME)
   }, [roundFrames]);
 
   useEffect(() => {
@@ -110,14 +126,14 @@ function DemoPlayerContainer(props) {
     setGrenades(getGrenades(roundFrames.frames, currentIdx))
     setInfernos(getInfernos(roundFrames.frames, currentIdx))
     setCurrentTime(getCurrentTime(roundFrames.frames, currentIdx))
+    setTerrorists(getTerroristTeam(roundFrames.frames, currentIdx))
+    setCounterTerrorists(getCounterTerroristsTeam(roundFrames.frames, currentIdx))
   }, [currentIdx, roundFrames]);
 
   useEffect(() => {
     const boundingBox = ref?.current?.getBoundingClientRect?.();
     setImgWidth(boundingBox.width)
   }, [boudingBoxCheck]);
-
-  getCts(players)
 
   return (
     <Grid
@@ -127,13 +143,19 @@ function DemoPlayerContainer(props) {
       <Grid item xs={2}>
         <TeamPlayerInfo
           players={getTrs(players)}
-          team="Terrorists"
+          team={terrorists}
+          side={"Terrorists"}
         />
       </Grid>
       <Grid item>
+        <PlayerHeader
+          trScore={terrorists.Score}
+          ctScore={counterTerrorists.Score}
+          timeLeft={currentTime}
+        />
         <Box
           maxHeight="100%"
-          maxWidth="800px"
+          maxWidth="650px"
           position="relative"
           ref={ref}>
           <DemoPlayer
@@ -152,9 +174,9 @@ function DemoPlayerContainer(props) {
       <Grid xs={2} justify="center">
         <TeamPlayerInfo
           players={getCts(players)}
-          team="Counter-Terrorists" />
+          team={counterTerrorists}
+          side={"Counter-Terrorists"} />
       </Grid>
-
     </Grid>
   )
 }

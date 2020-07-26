@@ -1,6 +1,6 @@
 import React from 'react'
 import DemoPlayerContainer from './DemoPlayer/DemoPlayerContainer'
-import RoundSlider from './RoundsSlider'
+import RoundSelect from './RoundSelect'
 import { Grid } from '@material-ui/core/';
 
 function Demo(props) {
@@ -12,12 +12,13 @@ function Demo(props) {
     >
       <Grid
         item
-        xs={10}>
+        xs={12}>
         <DemoPlayerContainer
           mapName={props.mapName}
           roundFrames={props.roundFrames}
         />
-        <RoundSlider
+        <RoundSelect
+          rounds={props.rounds}
           maxRounds={props.maxRounds}
           currentRound={props.currentRound}
           changeRoundCallback={props.changeRoundCallback}

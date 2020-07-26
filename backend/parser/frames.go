@@ -32,7 +32,7 @@ func IterateFrames(p dem.Parser, match *models.Match) {
 
 		// Add Time
 		time := getCurrentTime(p.CurrentTime())
-		match.Frames[idx].Time = time
+		match.Frames[idx].TimeElapsed = time
 
 		// Add Grenades
 		grenades := getGrenadeProjectile(gameState, match.MapName)
