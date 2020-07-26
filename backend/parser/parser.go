@@ -25,6 +25,7 @@ func CreateMatch(p dem.Parser, frameFactor int) *models.Match {
 
 	match := &models.Match{
 		FrameFactor: frameFactor,
+		FrameRate:   header.FrameRate(),
 		MapName:     header.MapName,
 		Frames:      make([]models.Frame, frames+10),
 	}

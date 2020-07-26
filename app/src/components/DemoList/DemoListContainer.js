@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react'
 import Loading from '../Loading/Loading'
 import DemoList from './DemoList'
 import Box from '@material-ui/core/Box';
+import { fetchUrl } from '../../url'
 
 const fetchDemos = (setDemos) => {
-    const url = "http://localhost:8080/demos"
+    const url = fetchUrl() + "/demos"
     return fetch(url)
         .then(response => response.json())
         .then(data => setDemos(data))

@@ -1,7 +1,10 @@
 package models
 
 import (
+	"os"
+
 	"github.com/jinzhu/gorm"
+	"github.com/joho/godotenv"
 
 	// Postgres
 	_ "github.com/jinzhu/gorm/dialects/postgres"
@@ -12,7 +15,9 @@ var DB *gorm.DB
 
 // ConnectDataBase function
 func ConnectDataBase() {
-	database, err := gorm.Open("postgres", "host=tuffi.db.elephantsql.com port=5432 user=uakosxpe dbname=uakosxpe password=o-Oko94vpxR1hgXXtRm07cu6PQwAXAP6")
+	err := godotenv.Load()
+	dbConfig := os.Getenv("DB_CONFIG")
+	database, err := gorm.Open("postgres", dbConfig)
 
 	if err != nil {
 		panic("Failed to connect to database!")

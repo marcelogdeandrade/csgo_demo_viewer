@@ -1,13 +1,14 @@
 import React, { useState } from 'react'
 import UploadDemo from './UploadDemo'
 import Loading from '../Loading/Loading'
+import { fetchUrl } from '../../url'
 
 const uploadDemoCallback = (c, setIsLoading, selectedDate) => {
   const file = c.target.files[0]
   const formData = new FormData();
   formData.append("file", file, "demo.dem")
   formData.append("date", selectedDate)
-  const url = "http://localhost:8080/upload_demo"
+  const url = fetchUrl() + "/upload_demo"
   setIsLoading(true)
   fetch(url, {
     method: "POST",

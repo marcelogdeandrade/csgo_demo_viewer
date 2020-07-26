@@ -6,17 +6,23 @@ import (
 	"os"
 
 	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
-
+	"github.com/joho/godotenv"
 	"github.com/marcelogdeandrade/csgo_demo_viewer/parser"
 )
 
 // CreateAwsSession function
 func CreateAwsSession() (sess *session.Session) {
+	err := godotenv.Load()
+	parser.CheckError(err)
+	accessKey := os.Getenv("AWS_ACCESS_KEY_ID")
+	secretKey := os.Getenv("AWS_SECRET_ACCESS_KEY")
 	sess, _ = session.NewSession(&aws.Config{
-		Region: aws.String("sa-east-1")},
+		Region:      aws.String("sa-east-1"),
+		Credentials: credentials.NewStaticCredentials(accessKey, secretKey, "")},
 	)
 	return
 }

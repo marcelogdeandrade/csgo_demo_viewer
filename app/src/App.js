@@ -1,5 +1,5 @@
 import React from 'react';
-import DemoContainer from './components/Demo/DemoContainer'
+import DemoFetch from './components/Demo/DemoFetch'
 import DemoListContainer from './components/DemoList/DemoListContainer'
 import UploadDemoContainer from './components/UploadDemo/UploadDemoContainer'
 import {
@@ -32,7 +32,7 @@ function App() {
           </Route>
           <Route path="/demo/:id">
             <Grid item xs={12}>
-              <DemoContainer />
+              <DemoFetch />
             </Grid>
           </Route>
         </Switch>

@@ -1,0 +1,35 @@
+import React, { useState, useEffect } from 'react';
+import { useParams } from "react-router-dom";
+import Loading from '../Loading/Loading';
+import DemoContainer from './DemoContainer'
+import Box from '@material-ui/core/Box';
+import { fetchUrl } from '../../url'
+
+function DemoFetch() {
+  const { id } = useParams();
+  const [demo, setDemo] = useState(null);
+
+  const fetchDemo = (demoName) => {
+    if (!demoName) { return null }
+    const url = fetchUrl() + "/get_demo/" + demoName
+    return fetch(url)
+      .then(response => response.json())
+      .then(data => setDemo(data))
+      .catch(err => console.log(err))
+  }
+
+  useEffect(() => {
+    fetchDemo(id)
+  }, [id]);
+
+  return (
+    <Box>
+      {demo ?
+        <DemoContainer
+          demo={demo}
+        /> : <Loading />}
+    </Box>
+  )
+}
+
+export default DemoFetch
