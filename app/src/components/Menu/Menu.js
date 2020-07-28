@@ -31,10 +31,17 @@ function Menu() {
           Upload
             </Button>
         <Button
+          className={classes.button}
           variant="contained"
           color="primary"
           onClick={() => history.push("/demos/")}>
           Demos
+          </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => history.push("/login/")}>
+          Login
           </Button>
       </Toolbar>
     </AppBar>

@@ -24,6 +24,7 @@ func ConnectDataBase() {
 	}
 
 	database.AutoMigrate(&Match{})
+	database.AutoMigrate(&Account{})
 
 	DB = database
 }
