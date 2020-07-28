@@ -26,19 +26,10 @@ function DemoContainer({ demo }) {
   const [isPlaying, setIsPlaying] = useState(false)
 
   const players = roundFrames[currentFrame].Players
-  const terroristPlayers = getTeamPlayers(players, "Terrorists")
-  const counterTerroristPlayers = getTeamPlayers(players, "Counter-Terrorists")
   const playSpeed = getPlaySpeed(demo.FrameRate, demo.FrameFactor)
 
-  const changeRound = (value) => {
-    setCurrentRound(value)
-  }
-
-  const changeFrame = (value) => {
-    setCurrentFrame(value)
-  }
-
   useEffect(() => {
+    setIsPlaying(false)
     setRoundFrames(filterRound(currentRound, demo.Frames))
     setCurrentFrame(constants.ROUND_START_FRAME)
   }, [currentRound, demo]);
@@ -65,15 +56,15 @@ function DemoContainer({ demo }) {
           currentRound={currentRound}
           maxRounds={demo.Rounds.length}
           maxFrames={roundFrames.length - 1}
-          changeRoundCallback={changeRound}
-          changeFrameCallback={changeFrame}
+          changeRoundCallback={setCurrentRound}
+          changeFrameCallback={setCurrentFrame}
           isPlaying={isPlaying}
           isPlayingCallback={setIsPlaying}
-          terroristPlayers={terroristPlayers}
+          terroristPlayers={getTeamPlayers(players, "Terrorists")}
           terroristTeam={roundFrames[currentFrame].Terrorists}
           currentTime={roundFrames[currentFrame].Time}
           counterTerroristTeam={roundFrames[currentFrame].CounterTerrorists}
-          counterTerroristPlayers={counterTerroristPlayers}
+          counterTerroristPlayers={getTeamPlayers(players, "Counter-Terrorists")}
           currentFrame={currentFrame}
           players={players}
         /> : <Loading />}

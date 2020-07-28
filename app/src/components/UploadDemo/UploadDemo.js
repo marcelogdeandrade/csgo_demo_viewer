@@ -1,9 +1,9 @@
 import React from 'react'
-import { Button, Paper } from '@material-ui/core/';
+import { Button, Paper, Typography, Grid, Tooltip, IconButton } from '@material-ui/core/';
+import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { makeStyles } from '@material-ui/core/styles';
 import DateFnsUtils from '@date-io/date-fns';
-import brLocale from "date-fns/locale/pt-BR";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -22,18 +22,18 @@ function UploadDemo(props) {
 
   const renderDatePicker = () => {
     return (
-      <MuiPickersUtilsProvider utils={DateFnsUtils} locale={brLocale}>
+      <MuiPickersUtilsProvider utils={DateFnsUtils}>
         <KeyboardDatePicker
           format="dd/MM/yyyy"
           margin="normal"
           id="date-picker-inline"
-          label="Data da demo"
+          label="Demo date"
           value={props.selectedDate}
           onChange={props.handleDateChange}
           KeyboardButtonProps={{
             'aria-label': 'change date',
           }} />
-      </MuiPickersUtilsProvider>
+      </MuiPickersUtilsProvider >
     )
   }
 
@@ -60,11 +60,34 @@ function UploadDemo(props) {
     )
   }
 
+  const helperMessage = `
+    Accepts only .dem files
+  `
 
   return (
     <Paper className={classes.paper}>
-      {renderDatePicker(props.selectedDate, props.handleDateChange)}
-      {renderUploadButton(props.onFormSubmit)}
+      <Grid container direction="column">
+        <Grid item>
+          <Grid container direction="row" alignItems="center">
+            <Grid item>
+              <Typography variant="overline">Upload your CSGO Demo</Typography>
+            </Grid>
+            <Grid item>
+              <Tooltip title={helperMessage}>
+                <IconButton>
+                  <HelpOutlineIcon />
+                </IconButton>
+              </Tooltip>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid item>
+          {renderDatePicker(props.selectedDate, props.handleDateChange)}
+        </Grid>
+        <Grid item>
+          {renderUploadButton(props.onFormSubmit)}
+        </Grid>
+      </Grid>
     </Paper>
   )
 }

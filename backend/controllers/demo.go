@@ -33,6 +33,7 @@ func UploadDemo(c *gin.Context, sess *session.Session) {
 
 	// Save match on db
 	matchID := uuid.New().String()
+	defer os.Remove(matchID)
 	db.SaveMatch(match, matchID)
 
 	// Transform to JSON

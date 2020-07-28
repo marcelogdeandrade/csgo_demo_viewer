@@ -23,7 +23,7 @@ function Player(props) {
     viewDirection: props.player.ViewDirection,
     left: x,
     top: y,
-    backgroundColor: player.Team === "Terrorists" ? "#ba000d" : "#002984",
+    backgroundColor: player.Team === "Terrorists" ? "#f44336" : "#03a9f4",
     playerSize: playerSize
   }
   const classes = useStyles(styleProps);
