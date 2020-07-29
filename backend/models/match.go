@@ -3,6 +3,7 @@ package models
 // Match model
 type Match struct {
 	ID                         uint   `json:"id" gorm:"primary_key"`
+	UserID                     uint   `json:"user_id"`
 	Map                        string `json:"map"`
 	DemoPath                   string `json:"demo_path"`
 	TerroristName              string `json:"tr_name"`

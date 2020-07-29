@@ -3,6 +3,8 @@ module github.com/marcelogdeandrade/csgo_demo_viewer
 go 1.14
 
 require (
+	github.com/appleboy/gin-jwt v2.5.0+incompatible
+	github.com/appleboy/gin-jwt/v2 v2.6.3
 	github.com/aws/aws-sdk-go v1.33.7
 	github.com/gin-contrib/cors v1.3.1
 	github.com/gin-gonic/gin v1.6.3
@@ -12,4 +14,6 @@ require (
 	github.com/joho/godotenv v1.3.0
 	github.com/markus-wa/demoinfocs-golang v1.11.0
 	github.com/markus-wa/demoinfocs-golang/v2 v2.3.0
+	golang.org/x/crypto v0.0.0-20200728195943-123391ffb6de
+	gopkg.in/dgrijalva/jwt-go.v3 v3.2.0 // indirect
 )

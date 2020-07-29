@@ -3,6 +3,7 @@ package controllers
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 
@@ -15,7 +16,7 @@ import (
 )
 
 // UploadDemo function
-func UploadDemo(c *gin.Context, sess *session.Session) {
+func UploadDemo(c *gin.Context, sess *session.Session, userID uint) {
 	// single file
 	file, _ := c.FormFile("file")
 
@@ -33,7 +34,7 @@ func UploadDemo(c *gin.Context, sess *session.Session) {
 
 	// Save match on db
 	matchID := uuid.New().String()
-	db.SaveMatch(match, matchID)
+	db.SaveMatch(match, matchID, userID)
 
 	// Transform to JSON
 	framesJSON, err := json.Marshal(match)
@@ -45,8 +46,13 @@ func UploadDemo(c *gin.Context, sess *session.Session) {
 }
 
 // GetDemo function
-func GetDemo(c *gin.Context, sess *session.Session) (int64, string, *os.File, map[string]string) {
+func GetDemo(c *gin.Context, sess *session.Session, userID uint) (int64, string, *os.File, map[string]string, error) {
+	var demo models.Match
 	filename := c.Param("file")
+	recordNotFound := models.DB.Where("user_id = ? AND id == ?", userID, filename).First(&demo).RecordNotFound()
+	if recordNotFound {
+		return 0, "", nil, nil, errors.New("no demo found")
+	}
 	file := DownloadFile(filename, sess)
 	fil, _ := file.Stat()
 	contentLength := fil.Size()
@@ -54,12 +60,12 @@ func GetDemo(c *gin.Context, sess *session.Session) (int64, string, *os.File, ma
 	extraHeaders := map[string]string{
 		"Content-Disposition": fmt.Sprintf(`attachment; filename="%s"`, filename),
 	}
-	return contentLength, contentType, file, extraHeaders
+	return contentLength, contentType, file, extraHeaders, nil
 }
 
 // ListDemos function
-func ListDemos(c *gin.Context) []models.Match {
+func ListDemos(c *gin.Context, userID uint) []models.Match {
 	var matches []models.Match
-	models.DB.Find(&matches)
+	models.DB.Where("user_id = ?", userID).Find(&matches)
 	return matches
 }
