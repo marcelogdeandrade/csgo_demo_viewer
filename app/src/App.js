@@ -8,26 +8,49 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
+  Redirect,
 } from "react-router-dom";
 import './App.css';
 import 'fontsource-roboto';
 import { Grid } from '@material-ui/core';
 import Menu from './components/Menu/Menu'
-import { createStore } from 'redux'
+import Snackbar from './components/Snackbar/Snackbar'
+import { createStore, combineReducers } from 'redux'
 import { loginReducer } from './reducers/user.reducers'
+import { alertReducer } from './reducers/alert.reducers'
+
 import { Provider } from 'react-redux'
+import Cookies from 'js-cookie';
 
 function App() {
-  const store = createStore(loginReducer)
+  const token = Cookies.get("jwt")
+  const isLoggedIn = token != null
+  const store = createStore(
+    combineReducers({ login: loginReducer, alert: alertReducer }),
+    { login: { isLoggedIn: isLoggedIn, token: token } },
+    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+  )
 
   return (
     <Provider store={store}>
       <Router>
+        <Snackbar />
         <Grid
           container
           justify="center">
           <Menu />
           <Switch>
+            <Route
+              exact
+              path="/"
+              render={() => {
+                return (
+                  isLoggedIn ?
+                    <Redirect to="/demos" /> :
+                    <Redirect to="/login" />
+                )
+              }}
+            />
             <Route path="/upload">
               <Grid item>
                 <UploadDemoContainer />

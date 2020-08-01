@@ -38,8 +38,9 @@ func UploadDemo(c *gin.Context, sess *session.Session, userID uint) {
 
 	// Transform to JSON
 	framesJSON, err := json.Marshal(match)
+	compressedFile := compressFile(framesJSON)
 	parser.CheckError(err)
-	r := bytes.NewReader(framesJSON)
+	r := bytes.NewReader(compressedFile.Bytes())
 
 	// Upload result to S3
 	UploadFile(matchID, r, sess)
@@ -56,9 +57,10 @@ func GetDemo(c *gin.Context, sess *session.Session, userID uint) (int64, string,
 	file := DownloadFile(filename, sess)
 	fil, _ := file.Stat()
 	contentLength := fil.Size()
-	contentType := "application/json"
+	contentType := "application/gzip"
 	extraHeaders := map[string]string{
 		"Content-Disposition": fmt.Sprintf(`attachment; filename="%s"`, filename),
+		"Content-Encoding":    "gzip",
 	}
 	return contentLength, contentType, file, extraHeaders, nil
 }

@@ -24,12 +24,12 @@ func main() {
 	models.ConnectDataBase()
 
 	config := cors.DefaultConfig()
-	config.AllowAllOrigins = true
+	config.AllowOrigins = []string{"http://front.marcelao.com.br"}
+	config.AllowCredentials = true
 	config.AllowHeaders = []string{"Origin"}
 	config.AllowMethods = []string{"GET", "POST"}
 
 	r.Use(cors.New(config))
-	r.Use(cors.Default())
 
 	authGroup := r.Group("/auth")
 	authGroup.Use(authMiddleware.MiddlewareFunc())

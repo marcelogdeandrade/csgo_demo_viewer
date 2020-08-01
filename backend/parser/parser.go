@@ -10,7 +10,7 @@ import (
 // Parse function
 func Parse(f io.Reader) models.Match {
 	p := OpenDemo(f)
-	match := CreateMatch(p, 5)
+	match := CreateMatch(p, 1)
 	RegisterEventHandlers(p, match)
 	IterateFrames(p, match)
 	PostParsingAdjustments(match)

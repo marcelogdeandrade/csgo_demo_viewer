@@ -44,12 +44,17 @@ func GetAuthMiddleWare() (*jwt.GinJWTMiddleware, error) {
 		// - "query:<name>"
 		// - "cookie:<name>"
 		// - "param:<name>"
-		TokenLookup: "header: Authorization, query: token, cookie: jwt",
+		// TokenLookup: "header: Authorization, query: token, cookie: jwt",
 		// TokenLookup: "query:token",
 		// TokenLookup: "cookie:token",
 
 		// TokenHeadName is a string in the header. Default value is "Bearer"
 		TokenHeadName: "Bearer",
+
+		// Cookie
+		SendCookie:   true,
+		CookieDomain: "marcelao.com.br",
+		TokenLookup:  "cookie:jwt",
 
 		// TimeFunc provides the current time. You can override it to use another time value. This is useful for testing or if your server uses a different time zone than your tokens.
 		TimeFunc: time.Now,
@@ -64,5 +69,5 @@ func VerifyToken(c *gin.Context) (uint, error) {
 	if userID == nil {
 		return 0, errors.New("token error")
 	}
-	return userID.(uint), nil
+	return uint(userID.(float64)), nil
 }

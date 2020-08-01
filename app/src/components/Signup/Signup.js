@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-function Signup() {
+function Signup(props) {
   const classes = useStyles()
   return (
     <Paper className={classes.paper}>
@@ -22,18 +22,36 @@ function Signup() {
           <Typography variant="overline">Sign-up</Typography>
         </Grid>
         <Grid item className={classes.item}>
-          <TextField size="small" id="outlined-basic" label="Username" variant="outlined" />
+          <TextField
+            size="small"
+            id="outlined-basic"
+            label="Username"
+            variant="outlined"
+            onChange={(e) => props.setUsername(e.target.value)} />
         </Grid>
         <Grid item className={classes.item}>
-          <TextField type="password" size="small" id="outlined-basic" label="Password" variant="outlined" />
+          <TextField
+            type="password"
+            size="small"
+            id="outlined-basic"
+            label="Password"
+            variant="outlined"
+            onChange={(e) => props.setPassword(e.target.value)} />
         </Grid>
         <Grid item className={classes.item}>
-          <TextField type="password" size="small" id="outlined-basic" label="Confirm Password" variant="outlined" />
+          <TextField
+            type="password"
+            size="small"
+            id="outlined-basic"
+            label="Confirm Password"
+            variant="outlined"
+            onChange={(e) => props.setConfirmPassword(e.target.value)} />
         </Grid>
         <Grid item className={classes.item}>
           <Grid item>
             <Button
               variant="contained"
+              onClick={props.fetchSignup}
               color="primary">Sign Up</Button>
           </Grid>
         </Grid>

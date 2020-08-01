@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"bytes"
+	"compress/gzip"
 	"context"
 	"io"
 	"os"
@@ -62,4 +64,12 @@ func DownloadFile(key string, sess *session.Session) *os.File {
 		})
 	parser.CheckError(err)
 	return file
+}
+
+func compressFile(jsonBytes []byte) bytes.Buffer {
+	var b bytes.Buffer
+	w := gzip.NewWriter(&b)
+	w.Write(jsonBytes)
+	w.Close()
+	return b
 }

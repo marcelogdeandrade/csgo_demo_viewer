@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-function Login() {
+function Login(props) {
   const classes = useStyles()
   const history = useHistory()
 
@@ -25,17 +25,29 @@ function Login() {
           <Typography variant="overline">Login</Typography>
         </Grid>
         <Grid item className={classes.item}>
-          <TextField size="small" id="outlined-basic" label="Username" variant="outlined" />
+          <TextField
+            size="small"
+            id="outlined-basic"
+            label="Username"
+            variant="outlined"
+            onChange={(e) => props.setUsername(e.target.value)} />
         </Grid>
         <Grid item className={classes.item}>
-          <TextField type="password" size="small" id="outlined-basic" label="Password" variant="outlined" />
+          <TextField
+            type="password"
+            size="small"
+            id="outlined-basic"
+            label="Password"
+            variant="outlined"
+            onChange={(e) => props.setPassword(e.target.value)} />
         </Grid>
         <Grid item className={classes.item}>
           <Grid container direction="row" justify="space-around">
             <Grid item>
               <Button
                 variant="contained"
-                color="primary">Login</Button>
+                color="primary"
+                onClick={props.fetchLogin}>Login</Button>
             </Grid>
             <Grid item>
               <Button

@@ -11,8 +11,10 @@ function DemoFetch() {
 
   const fetchDemo = (demoName) => {
     if (!demoName) { return null }
-    const url = fetchUrl() + "/get_demo/" + demoName
-    return fetch(url)
+    const url = fetchUrl() + "/auth/get_demo/" + demoName
+    return fetch(url, {
+      credentials: 'include'
+    })
       .then(response => response.json())
       .then(data => setDemo(data))
       .catch(err => console.log(err))
@@ -21,6 +23,8 @@ function DemoFetch() {
   useEffect(() => {
     fetchDemo(id)
   }, [id]);
+
+  console.log(demo)
 
   return (
     <Box>
