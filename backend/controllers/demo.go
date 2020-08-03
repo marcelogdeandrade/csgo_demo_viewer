@@ -34,7 +34,7 @@ func UploadDemo(c *gin.Context, sess *session.Session, userID uint) {
 
 	// Save match on db
 	matchID := uuid.New().String()
-	db.SaveMatch(match, matchID, userID)
+	db.SaveMatch(match, matchID, userID, date)
 
 	// Transform to JSON
 	framesJSON, err := json.Marshal(match)
@@ -50,7 +50,7 @@ func UploadDemo(c *gin.Context, sess *session.Session, userID uint) {
 func GetDemo(c *gin.Context, sess *session.Session, userID uint) (int64, string, *os.File, map[string]string, error) {
 	var demo models.Match
 	filename := c.Param("file")
-	recordNotFound := models.DB.Where("user_id = ? AND id == ?", userID, filename).First(&demo).RecordNotFound()
+	recordNotFound := models.DB.Where("user_id = ? AND demo_path = ?", userID, filename).First(&demo).RecordNotFound()
 	if recordNotFound {
 		return 0, "", nil, nil, errors.New("no demo found")
 	}
@@ -70,4 +70,16 @@ func ListDemos(c *gin.Context, userID uint) []models.Match {
 	var matches []models.Match
 	models.DB.Where("user_id = ?", userID).Find(&matches)
 	return matches
+}
+
+// RemoveDemo function
+func RemoveDemo(c *gin.Context, userID uint) error {
+	var demo models.Match
+	filename := c.Param("file")
+	query := models.DB.Where("user_id = ? AND demo_path = ?", userID, filename).First(&demo)
+	if query.RecordNotFound() {
+		return errors.New("no demo found")
+	}
+	models.DB.Delete(&demo)
+	return nil
 }

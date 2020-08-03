@@ -1,6 +1,15 @@
-import React from 'react'
-import { Button, Card, CardContent, CardActions, Typography, Grid } from '@material-ui/core/';
+import React, { useState } from 'react'
+import { Button, Typography, Grid, Paper, IconButton, Dialog, DialogTitle, DialogContent, DialogActions, DialogContentText } from '@material-ui/core/';
 import { useHistory } from "react-router-dom";
+import { makeStyles } from '@material-ui/core/styles';
+import DeleteIcon from '@material-ui/icons/Delete';
+import DeleteDialog from './DeleteDialog'
+
+const useStyles = makeStyles((theme) => ({
+  card: {
+    padding: 10
+  }
+}));
 
 const openDemo = (demoPath, history) => {
   history.push("/demo/" + demoPath);
@@ -36,26 +45,51 @@ const renderCardContent = (demo) => {
           {demo.map}
         </Typography>
       </Grid>
+      <Grid item>
+        <Typography>
+          {demo.date}
+        </Typography>
+      </Grid>
     </Grid>
 
   )
 }
 
 function DemoDetails(props) {
-  const history = useHistory();
-
+  const history = useHistory()
+  const classes = useStyles()
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const demo = props.demo
+
+  const renderConfirmDeleteDialog = () => {
+    return (
+      <DeleteDialog
+        open={deleteDialogOpen}
+        setOpen={setDeleteDialogOpen}
+        removeDemoCallback={() => props.removeDemoCallback(demo.demo_path)}
+      />
+    )
+  }
+
   return (
-    <Card>
-      <CardContent>
+    <div>
+      <Paper className={classes.card}>
         {renderCardContent(demo)}
-      </CardContent>
-      <CardActions>
-        <Button variant="outlined" color="primary" onClick={() => openDemo(demo.demo_path, history)}>
-          Open Demo
+        <Grid
+          container
+          justify="space-between"
+          direction="row">
+          <Button variant="outlined" color="primary" onClick={() => openDemo(demo.demo_path, history)}>
+            Open Demo
         </Button>
-      </CardActions>
-    </Card  >
+          <IconButton variant="outlined" color="primary" onClick={() => setDeleteDialogOpen(true)}>
+            <DeleteIcon />
+          </IconButton>
+        </Grid>
+      </Paper  >
+      {renderConfirmDeleteDialog()}
+    </div>
+
   )
 }
 

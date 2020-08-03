@@ -22,13 +22,13 @@ const uploadDemoCallback = (c, setIsLoading, selectedDate) => {
 
 }
 
-const handleDateChange = (date, setSelectedDate) => {
-  setSelectedDate(date);
+const handleDateChange = (date, value, setSelectedDate) => {
+  setSelectedDate({ date: date, value: value });
 };
 
 function UploadDemoContainer() {
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(new Date('2020-01-01T21:11:54'));
+  const [selectedDate, setSelectedDate] = useState({ date: new Date('2020-01-01T21:11:54'), value: "01/01/2020" });
   const token = Cookies.get("jwt")
 
   return (
@@ -38,9 +38,9 @@ function UploadDemoContainer() {
           <Loading />
           :
           <UploadDemo
-            onFormSubmit={(event) => uploadDemoCallback(event, setIsLoading, selectedDate)}
-            handleDateChange={(date) => handleDateChange(date, setSelectedDate)}
-            selectedDate={selectedDate}
+            onFormSubmit={(event) => uploadDemoCallback(event, setIsLoading, selectedDate.value)}
+            handleDateChange={(date, value) => handleDateChange(date, value, setSelectedDate)}
+            selectedDate={selectedDate.date}
           /> :
         <Error />
       }

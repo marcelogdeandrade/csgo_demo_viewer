@@ -28,7 +28,7 @@ function LoginContainer() {
       })
       .then(data => dispath(loginAction(data.token)))
       .then(() => history.push("/demos/"))
-      .catch(err => dispath(alertAction("Senha errada", "error")))
+      .catch(err => dispath(alertAction("Error with login", "error")))
   }
 
 

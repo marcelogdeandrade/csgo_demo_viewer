@@ -20,6 +20,7 @@ function DemoList(props) {
       return (
         <div className={classes.listItem}>
           <DemoDetail
+            removeDemoCallback={props.removeDemoCallback}
             demo={demo} />
         </div>
 

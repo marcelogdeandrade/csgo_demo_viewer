@@ -24,10 +24,10 @@ func main() {
 	models.ConnectDataBase()
 
 	config := cors.DefaultConfig()
-	config.AllowOrigins = []string{"http://front.marcelao.com.br"}
+	config.AllowOrigins = []string{"http://front.marcelao.com.br", "https://csdemos.com", "http://csdemos.com"}
 	config.AllowCredentials = true
 	config.AllowHeaders = []string{"Origin"}
-	config.AllowMethods = []string{"GET", "POST"}
+	config.AllowMethods = []string{"GET", "POST", "DELETE"}
 
 	r.Use(cors.New(config))
 
@@ -63,6 +63,20 @@ func main() {
 			c.JSON(200, gin.H{
 				"status":  "200",
 				"message": "uploaded",
+			})
+		})
+		authGroup.DELETE("/remove_demo/:file", func(c *gin.Context) {
+			userID, err := auth.VerifyToken(c)
+			if err != nil {
+				c.JSON(http.StatusBadRequest, gin.H{"error": "token error"})
+			}
+			err = controllers.RemoveDemo(c, userID)
+			if err != nil {
+				c.JSON(http.StatusBadRequest, gin.H{"error": "delete error"})
+			}
+			c.JSON(200, gin.H{
+				"status":  "200",
+				"message": "deleted",
 			})
 		})
 	}

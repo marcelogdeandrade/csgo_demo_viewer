@@ -6,7 +6,7 @@ import (
 )
 
 // SaveMatch function
-func SaveMatch(match parsermodels.Match, matchID string, userID uint) {
+func SaveMatch(match parsermodels.Match, matchID string, userID uint, date string) {
 	mapName := match.MapName
 	ctScore, trScore := getFinalScores(match)
 	ctName, trName := getTeamNames(match)
@@ -14,6 +14,7 @@ func SaveMatch(match parsermodels.Match, matchID string, userID uint) {
 		Map:                        mapName,
 		DemoPath:                   matchID,
 		TerroristName:              trName,
+		Date:                       date,
 		CounterTerroristName:       ctName,
 		TerroristFinalScore:        trScore,
 		CounterTerroristFinalScore: ctScore,
