@@ -4,22 +4,53 @@ import Loading from '../Loading/Loading'
 import { fetchUrl } from '../../url'
 import Error from '../Error/Error'
 import Cookies from 'js-cookie';
+import axios from 'axios';
 
-const uploadDemoCallback = (c, setIsLoading, selectedDate) => {
-  const file = c.target.files[0]
+const processDemo = (matchID, selectedDate, setIsLoading) => {
   const formData = new FormData();
-  formData.append("file", file, "demo.dem")
+  formData.append("match_id", matchID)
   formData.append("date", selectedDate)
   const url = fetchUrl() + "/auth/upload_demo"
-  setIsLoading(true)
-  fetch(url, {
+
+  const payLoad = {
     method: "POST",
     credentials: 'include',
     body: formData
-  })
-    .then(_ => setIsLoading(false))
-    .catch(err => console.log(err))
+  }
 
+  fetch(url, payLoad)
+    .then(response => response.json())
+    .then(_ => setIsLoading(false))
+}
+
+const getUploadURL = (c, setIsLoading, selectedDate) => {
+  const file = c.target.files[0]
+  const url = fetchUrl() + "/auth/upload_demo"
+  fetch(url, {
+    credentials: 'include',
+  })
+    .then(response => response.json())
+    .then(data => uploadDemo(file, setIsLoading, selectedDate, data.upload_url, data.match_id))
+}
+
+const uploadDemo = (file, setIsLoading, selectedDate, url, matchID) => {
+  setIsLoading(true)
+
+  const options = {
+    onUploadProgress: progressEvent => console.log(progressEvent.loaded)
+  }
+  axios({
+    method: "PUT",
+    url: url,
+    data: file,
+    headers: {
+      "Content-Type": "binary/octet-stream",
+      accept: "binary/octet-stream",
+    },
+    options: options
+  })
+    .then(_ => processDemo(matchID, selectedDate, setIsLoading))
+    .catch(err => console.log(err))
 }
 
 const handleDateChange = (date, value, setSelectedDate) => {
@@ -38,7 +69,8 @@ function UploadDemoContainer() {
           <Loading />
           :
           <UploadDemo
-            onFormSubmit={(event) => uploadDemoCallback(event, setIsLoading, selectedDate.value)}
+            onFormSubmit={(event) => getUploadURL(event, setIsLoading, selectedDate.value)}
+            // onFormSubmit={(event) => uploadDemoCallback(event, setIsLoading, selectedDate.value)}
             handleDateChange={(date, value) => handleDateChange(date, value, setSelectedDate)}
             selectedDate={selectedDate.date}
           /> :

@@ -1,4 +1,4 @@
-const PROD_URL = "http://api.csdemos.com:8080"
+const PROD_URL = "https://api.csdemos.com"
 const LOCAL_URL = "http://back.marcelao.com.br"
 
 export const fetchUrl = () => {

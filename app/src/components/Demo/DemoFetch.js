@@ -9,6 +9,14 @@ function DemoFetch() {
   const { id } = useParams();
   const [demo, setDemo] = useState(null);
 
+  const fetchDemoFile = (url) => {
+    console.log(url)
+    return fetch(url)
+      .then(response => response.json())
+      .then(data => setDemo(data))
+      .catch(err => console.log(err))
+  }
+
   const fetchDemo = (demoName) => {
     if (!demoName) { return null }
     const url = fetchUrl() + "/auth/get_demo/" + demoName
@@ -16,7 +24,7 @@ function DemoFetch() {
       credentials: 'include'
     })
       .then(response => response.json())
-      .then(data => setDemo(data))
+      .then(data => fetchDemoFile(data.demo_url))
       .catch(err => console.log(err))
   }
 

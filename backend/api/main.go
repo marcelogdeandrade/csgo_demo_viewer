@@ -1,19 +1,28 @@
 package main
 
 import (
+	"context"
 	"log"
 	"net/http"
+	"os"
 
+	"github.com/aws/aws-lambda-go/events"
+	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/gin-gonic/gin"
 
 	"github.com/gin-contrib/cors"
 	"github.com/marcelogdeandrade/csgo_demo_viewer/auth"
 	"github.com/marcelogdeandrade/csgo_demo_viewer/controllers"
 	"github.com/marcelogdeandrade/csgo_demo_viewer/models"
+
+	ginadapter "github.com/awslabs/aws-lambda-go-api-proxy/gin"
 )
 
-func main() {
-	r := gin.Default()
+var ginLambda *ginadapter.GinLambda
+var r *gin.Engine
+
+func init() {
+	r = gin.Default()
 	sess := controllers.CreateAwsSession()
 	authMiddleware, err := auth.GetAuthMiddleWare()
 
@@ -47,11 +56,27 @@ func main() {
 			if err != nil {
 				c.JSON(http.StatusBadRequest, gin.H{"error": "token error"})
 			}
-			contentLength, contentType, file, extraHeaders, err := controllers.GetDemo(c, sess, userID)
+			url, err := controllers.GetDemo(c, sess, userID)
 			if err != nil {
 				c.JSON(http.StatusBadRequest, gin.H{"error": "demo not round"})
 			}
-			c.DataFromReader(200, contentLength, contentType, file, extraHeaders)
+			c.JSON(200, gin.H{
+				"status":   "200",
+				"demo_url": url,
+			})
+		})
+
+		authGroup.GET("/upload_demo", func(c *gin.Context) {
+			_, err := auth.VerifyToken(c)
+			if err != nil {
+				c.JSON(http.StatusBadRequest, gin.H{"error": "token error"})
+			}
+			matchID, url := controllers.GetUploadDemoURL(c, sess)
+			c.JSON(200, gin.H{
+				"status":     "200",
+				"upload_url": url,
+				"match_id":   matchID,
+			})
 		})
 
 		authGroup.POST("/upload_demo", func(c *gin.Context) {
@@ -59,7 +84,10 @@ func main() {
 			if err != nil {
 				c.JSON(http.StatusBadRequest, gin.H{"error": "token error"})
 			}
-			controllers.UploadDemo(c, sess, userID)
+			err = controllers.ProcessDemo(c, sess, userID)
+			if err != nil {
+				c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			}
 			c.JSON(200, gin.H{
 				"status":  "200",
 				"message": "uploaded",
@@ -84,5 +112,20 @@ func main() {
 	r.POST("/signup", controllers.SignUp)
 	r.POST("/login", authMiddleware.LoginHandler)
 
-	r.Run()
+	ginLambda = ginadapter.New(r)
+}
+
+// Handler Function
+func Handler(ctx context.Context, req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+	// If no name is provided in the HTTP request body, throw an error
+	return ginLambda.ProxyWithContext(ctx, req)
+}
+
+func main() {
+	appEnv := os.Getenv("APP_ENV")
+	if appEnv == "production" {
+		lambda.Start(Handler)
+	} else {
+		r.Run(":8080")
+	}
 }

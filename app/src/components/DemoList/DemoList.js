@@ -14,8 +14,9 @@ const useStyles = makeStyles((theme) => ({
 
 function DemoList(props) {
   const classes = useStyles()
+  const demos = props.demos.data
 
-  const renderDemos = (demos) => {
+  const renderDemos = () => {
     return demos.map(demo => {
       return (
         <div className={classes.listItem}>
@@ -30,7 +31,7 @@ function DemoList(props) {
 
   return (
     <List >
-      {renderDemos(props.demos.data)}
+      {renderDemos()}
     </List >
   )
 }

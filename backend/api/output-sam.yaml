@@ -1,0 +1,26 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: CS Demos Backend
+Resources:
+  SampleFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: main
+      CodeUri: s3://csdemos-backend/4af98de07120bd1ed9120d6c3fc80e7c
+      Runtime: go1.x
+      MemorySize: 1024
+      Policies: AWSLambdaBasicExecutionRole
+      Timeout: 100
+      Events:
+        GetResource:
+          Type: Api
+          Properties:
+            Path: /{proxy+}
+            Method: any
+Outputs:
+  SampleGinApi:
+    Description: URL for application
+    Value:
+      Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/csdemos
+    Export:
+      Name: CSDemos

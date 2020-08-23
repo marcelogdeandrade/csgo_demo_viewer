@@ -2,6 +2,7 @@ package auth
 
 import (
 	"errors"
+	"os"
 	"time"
 
 	jwt "github.com/appleboy/gin-jwt/v2"
@@ -36,27 +37,13 @@ func GetAuthMiddleWare() (*jwt.GinJWTMiddleware, error) {
 				"message": message,
 			})
 		},
-		// TokenLookup is a string in the form of "<source>:<name>" that is used
-		// to extract token from the request.
-		// Optional. Default value "header:Authorization".
-		// Possible values:
-		// - "header:<name>"
-		// - "query:<name>"
-		// - "cookie:<name>"
-		// - "param:<name>"
-		// TokenLookup: "header: Authorization, query: token, cookie: jwt",
-		// TokenLookup: "query:token",
-		// TokenLookup: "cookie:token",
 
-		// TokenHeadName is a string in the header. Default value is "Bearer"
 		TokenHeadName: "Bearer",
 
-		// Cookie
 		SendCookie:   true,
-		CookieDomain: "marcelao.com.br",
+		CookieDomain: getCurrentDomain(),
 		TokenLookup:  "cookie:jwt",
 
-		// TimeFunc provides the current time. You can override it to use another time value. This is useful for testing or if your server uses a different time zone than your tokens.
 		TimeFunc: time.Now,
 	})
 	return authMiddleware, err
@@ -70,4 +57,12 @@ func VerifyToken(c *gin.Context) (uint, error) {
 		return 0, errors.New("token error")
 	}
 	return uint(userID.(float64)), nil
+}
+
+func getCurrentDomain() string {
+	appEnv := os.Getenv("APP_ENV")
+	if appEnv == "production" {
+		return "csdemos.com"
+	}
+	return "marcelao.com.br"
 }
