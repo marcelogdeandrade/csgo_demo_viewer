@@ -1,7 +1,7 @@
 package parser
 
 import (
-	models "github.com/marcelogdeandrade/csgo_demo_viewer/parser/models"
+	models "github.com/marcelogdeandrade/csgo-demo-parser/parser/models"
 )
 
 //PostParsingAdjustments function

@@ -5,7 +5,8 @@ import (
 	"time"
 
 	"github.com/golang/geo/r2"
-	models "github.com/marcelogdeandrade/csgo_demo_viewer/parser/models"
+	models "github.com/marcelogdeandrade/csgo-demo-parser/parser/models"
+	"github.com/marcelogdeandrade/csgo-demo-parser/utils"
 	"github.com/markus-wa/demoinfocs-golang/metadata"
 	dem "github.com/markus-wa/demoinfocs-golang/v2/pkg/demoinfocs"
 	common "github.com/markus-wa/demoinfocs-golang/v2/pkg/demoinfocs/common"
@@ -15,7 +16,7 @@ import (
 func IterateFrames(p dem.Parser, match *models.Match) {
 	count := 0
 	for ok, err := p.ParseNextFrame(); ok; ok, err = p.ParseNextFrame() {
-		CheckError(err)
+		utils.CheckError(err)
 
 		// Skip frames
 		count++

@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/marcelogdeandrade/csgo_demo_viewer/db"
 	"github.com/marcelogdeandrade/csgo_demo_viewer/models"
-	"github.com/marcelogdeandrade/csgo_demo_viewer/parser"
+	"github.com/marcelogdeandrade/csgo_demo_viewer/utils"
 )
 
 // ProcessDemo function
@@ -43,7 +43,7 @@ func ProcessDemo(c *gin.Context, sess *session.Session, userID uint) error {
 // GetUploadDemoURL function
 func GetUploadDemoURL(c *gin.Context, sess *session.Session) (string, string) {
 	matchID, url, err := GetFileURL(sess)
-	parser.CheckError(err)
+	utils.CheckError(err)
 	return matchID, url
 }
 

@@ -3,7 +3,8 @@ package parser
 import (
 	"io"
 
-	models "github.com/marcelogdeandrade/csgo_demo_viewer/parser/models"
+	models "github.com/marcelogdeandrade/csgo-demo-parser/parser/models"
+	"github.com/marcelogdeandrade/csgo-demo-parser/utils"
 	dem "github.com/markus-wa/demoinfocs-golang/v2/pkg/demoinfocs"
 )
 
@@ -20,7 +21,7 @@ func Parse(f io.Reader) models.Match {
 // CreateMatch function
 func CreateMatch(p dem.Parser, frameFactor int) *models.Match {
 	header, err := p.ParseHeader()
-	CheckError(err)
+	utils.CheckError(err)
 	frames := header.PlaybackFrames / frameFactor
 
 	match := &models.Match{

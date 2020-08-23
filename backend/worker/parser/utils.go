@@ -4,18 +4,11 @@ import (
 	"io"
 	"strconv"
 
-	models "github.com/marcelogdeandrade/csgo_demo_viewer/parser/models"
+	models "github.com/marcelogdeandrade/csgo-demo-parser/parser/models"
 	dem "github.com/markus-wa/demoinfocs-golang/v2/pkg/demoinfocs"
 	common "github.com/markus-wa/demoinfocs-golang/v2/pkg/demoinfocs/common"
 	events "github.com/markus-wa/demoinfocs-golang/v2/pkg/demoinfocs/events"
 )
-
-// CheckError function
-func CheckError(err error) {
-	if err != nil {
-		panic(err.Error())
-	}
-}
 
 // OpenDemo function
 func OpenDemo(f io.Reader) (p dem.Parser) {
